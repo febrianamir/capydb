@@ -1,3 +1,51 @@
+/* Fonts */
+@font-face {
+  font-family: 'Inter';
+  src: url('assets/fonts/Inter/InterVariable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Variables */
+:root {
+  --color-bg: #222222;
+  --color-text: #d2d2d2;
+}
+
+/* Defaults */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
 body {
-  background-color: white;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  color: var(--color-text);
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
