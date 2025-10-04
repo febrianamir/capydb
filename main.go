@@ -1,6 +1,7 @@
 package main
 
 import (
+	"capydb/backend/usecase"
 	"embed"
 
 	"github.com/wailsapp/wails/v2"
@@ -13,6 +14,7 @@ var assets embed.FS
 
 func main() {
 	// Create an instance of the app structure
+	usecase := usecase.NewUsecase()
 	app := NewApp()
 
 	// Create application with options
@@ -27,6 +29,7 @@ func main() {
 		OnStartup:        app.startup,
 		Bind: []any{
 			app,
+			usecase,
 		},
 	})
 
