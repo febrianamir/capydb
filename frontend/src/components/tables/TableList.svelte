@@ -2,12 +2,14 @@
   import { onMount } from "svelte";
   import {
     GetTableColumns,
+    GetTableRecords,
     GetTables,
   } from "../../../wailsjs/go/usecase/Usecase";
 
   let isShowTableList = $state(false);
   let tables = $state([]);
   let tableColumns = $state([]);
+  let tableRecords = $state([]);
 
   onMount(async () => {
     try {
@@ -18,12 +20,17 @@
     }
   });
 
-  async function getTableColumns(tableName) {
+  async function getTableContents(tableName) {
     try {
       tableColumns = await GetTableColumns(tableName);
-      console.log(tableColumns);
+
+      let req = {
+        table_name: tableName,
+      };
+      let tableRecordsRes = await GetTableRecords(req);
+      tableRecords = tableRecordsRes.Data;
     } catch (err) {
-      console.log("Failed to get table columns:", err);
+      console.log("Failed to get table contents:", err);
     }
   }
 </script>
@@ -37,7 +44,7 @@
             <li
               onclick={(e) => {
                 e.preventDefault();
-                getTableColumns(table);
+                getTableContents(table);
               }}
             >
               {table}
@@ -57,6 +64,17 @@
             {/each}
           </tr>
         </thead>
+        <tbody>
+          {#if tableRecords.length > 0}
+            {#each tableRecords as tableRecord}
+              <tr>
+                {#each tableColumns as tableColumn}
+                  <td>{tableRecord[tableColumn.column_name]}</td>
+                {/each}
+              </tr>
+            {/each}
+          {/if}
+        </tbody>
       </table>
     {/if}
   </div>

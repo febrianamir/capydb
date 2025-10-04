@@ -10,6 +10,10 @@ export function GetTableColumns(arg1) {
   return window['go']['usecase']['Usecase']['GetTableColumns'](arg1);
 }
 
+export function GetTableRecords(arg1) {
+  return window['go']['usecase']['Usecase']['GetTableRecords'](arg1);
+}
+
 export function GetTables() {
   return window['go']['usecase']['Usecase']['GetTables']();
 }
