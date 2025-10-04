@@ -1,5 +1,5 @@
 <script>
-  import { CreateConnection } from "../wailsjs/go/usecase/Usecase";
+  import { CreateConnection, GetTables } from "../wailsjs/go/usecase/Usecase";
   let dbCredential = $state({
     connection_name: "",
     host: "",
@@ -9,11 +9,16 @@
     database_name: "",
   });
 
+  let isShowTableList = $state(false);
+  let tables = $state([]);
+
   async function createConnection(e) {
     e.preventDefault();
 
     try {
       await CreateConnection(dbCredential);
+      tables = await GetTables();
+      isShowTableList = true;
     } catch (err) {
       console.log("Failed to create connection:", err);
     }
@@ -92,6 +97,15 @@
       <button type="submit" class="connection-btn-connect">Connect</button>
     </div>
   </form>
+  {#if isShowTableList}
+    {#if tables}
+      <div class="ul">
+        {#each tables as table}
+          <li>{table}</li>
+        {/each}
+      </div>
+    {/if}
+  {/if}
 </main>
 
 <style>

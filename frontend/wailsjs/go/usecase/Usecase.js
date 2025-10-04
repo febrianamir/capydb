@@ -5,3 +5,7 @@
 export function CreateConnection(arg1) {
   return window['go']['usecase']['Usecase']['CreateConnection'](arg1);
 }
+
+export function GetTables() {
+  return window['go']['usecase']['Usecase']['GetTables']();
+}
