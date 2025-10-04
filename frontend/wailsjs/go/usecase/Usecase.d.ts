@@ -4,4 +4,6 @@ import {request} from '../models';
 
 export function CreateConnection(arg1:request.CreateConnection):Promise<void>;
 
+export function GetTableColumns(arg1:string):Promise<Array<Record<string, any>>>;
+
 export function GetTables():Promise<Array<string>>;
