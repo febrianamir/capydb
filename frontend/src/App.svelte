@@ -1,20 +1,18 @@
 <script>
   import Connection from "./components/connections/Connection.svelte";
-  import TableList from "./components/tables/TableList.svelte";
+  import Table from "./components/tables/Table.svelte";
   import Tab from "./components/Tab.svelte";
   import { getOpenedTab } from "./states/tab.svelte";
 </script>
 
 <div class="app">
   <Tab />
-  <div>
-    {#if getOpenedTab() === "CONNECTION"}
-      <Connection />
-    {/if}
-    {#if getOpenedTab() === "TABLE"}
-      <TableList />
-    {/if}
-  </div>
+  {#if getOpenedTab() === "CONNECTION"}
+    <Connection />
+  {/if}
+  {#if getOpenedTab() === "TABLE"}
+    <Table />
+  {/if}
 </div>
 
 <style>

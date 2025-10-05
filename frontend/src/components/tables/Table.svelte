@@ -5,6 +5,7 @@
     GetTableRecords,
     GetTables,
   } from "../../../wailsjs/go/usecase/Usecase";
+  import { Table } from "@lucide/svelte";
 
   let isShowTableList = $state(false);
   let tables = $state([]);
@@ -39,18 +40,24 @@
   <div class="table-sidebar">
     {#if isShowTableList}
       {#if tables.length > 0}
-        <div class="ul">
+        <ul class="table-list">
           {#each tables as table}
             <li
+              class="table-item"
               onclick={(e) => {
                 e.preventDefault();
                 getTableContents(table);
               }}
             >
-              {table}
+              <div class="table-item-icon">
+                <Table size="15" />
+              </div>
+              <div class="table-item-text">
+                {table}
+              </div>
             </li>
           {/each}
-        </div>
+        </ul>
       {/if}
     {/if}
   </div>
@@ -83,6 +90,8 @@
 <style>
   .table {
     display: flex;
+    flex: 1;
+    min-height: 0;
   }
 
   .table-content {
@@ -91,7 +100,35 @@
   }
 
   .table-sidebar {
+    flex: 0 0 250px;
     width: 250px;
+    min-width: 0;
     overflow: auto;
+  }
+
+  .table-list {
+    width: max-content;
+    font-size: 14px;
+    list-style: none;
+    padding: 0.75rem;
+    margin: 0;
+  }
+
+  .table-item {
+    display: flex;
+    align-items: center;
+    padding: 0.2rem 0.4rem;
+    gap: 0.2rem;
+    transition: 0.2s ease;
+    border-radius: 0.3rem;
+  }
+
+  .table-item:hover {
+    background-color: #333333;
+  }
+
+  .table-item-icon {
+    display: flex;
+    align-items: center;
   }
 </style>
