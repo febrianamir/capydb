@@ -1,6 +1,5 @@
 <script>
   import Connection from "./components/connections/Connection.svelte";
-  import InputConnection from "./components/connections/InputConnection.svelte";
   import TableList from "./components/tables/TableList.svelte";
   import Tab from "./components/Tab.svelte";
   import { getOpenedTab } from "./states/tab.svelte";
@@ -11,7 +10,6 @@
   <div>
     {#if getOpenedTab() === "CONNECTION"}
       <Connection />
-      <InputConnection />
     {/if}
     {#if getOpenedTab() === "TABLE"}
       <TableList />

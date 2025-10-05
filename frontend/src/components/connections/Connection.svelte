@@ -1,16 +1,19 @@
 <script>
   import ListConnection from "./ListConnection.svelte";
-
-  // your script goes here
+  import InputConnection from "./InputConnection.svelte";
 </script>
 
 <div class="connection">
-  <h2 class="connection-header">ALL CONNECTIONS</h2>
-  <ListConnection />
+  <div>
+    <h2 class="connection-header">ALL CONNECTIONS</h2>
+    <ListConnection />
+  </div>
+  <InputConnection />
 </div>
 
 <style>
   .connection {
+    display: flex;
     padding: 1rem;
   }
 

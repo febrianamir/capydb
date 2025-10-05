@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { GetCredentials } from "../../../wailsjs/go/usecase/Usecase";
   import { Server, User, Database } from "@lucide/svelte";
+  import { dbCredential } from "../../states/connection.svelte";
 
   let credentials = $state([]);
 
@@ -14,12 +15,23 @@
       console.log("Failed to get list credentials:", err);
     }
   });
+
+  function fillCredential(credential) {
+    dbCredential.has_active_connection = false;
+    dbCredential.connection_name = credential.title;
+    dbCredential.db_vendor = credential.db_vendor;
+    dbCredential.host = credential.host;
+    dbCredential.port = credential.port;
+    dbCredential.user = credential.user;
+    dbCredential.password = credential.password;
+    dbCredential.database_name = credential.database_name;
+  }
 </script>
 
 <div class="connection-list">
   {#if credentials.length > 0}
     {#each credentials as credential}
-      <div class="connection-item">
+      <div class="connection-item" onclick={() => fillCredential(credential)}>
         <div class="connection-db-vendor">
           {credential.db_vendor}
         </div>
