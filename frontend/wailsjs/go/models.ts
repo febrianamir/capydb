@@ -19,6 +19,7 @@ export namespace model {
 	    }
 	}
 	export class Credential {
+	    id: number;
 	    title: string;
 	    db_vendor: string;
 	    hex_color: string;
@@ -36,6 +37,7 @@ export namespace model {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
 	        this.title = source["title"];
 	        this.db_vendor = source["db_vendor"];
 	        this.hex_color = source["hex_color"];

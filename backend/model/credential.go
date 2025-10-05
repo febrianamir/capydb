@@ -1,6 +1,7 @@
 package model
 
 type Credential struct {
+	ID           int    `json:"id"`
 	Title        string `json:"title"`
 	DBVendor     string `json:"db_vendor"`
 	HexColor     string `json:"hex_color"`
