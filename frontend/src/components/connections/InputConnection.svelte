@@ -10,6 +10,7 @@
 
     try {
       await CreateConnection(dbCredential);
+      dbCredential.has_active_connection = true;
     } catch (err) {
       console.log("Failed to create connection:", err);
     }

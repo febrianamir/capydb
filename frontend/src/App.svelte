@@ -2,43 +2,29 @@
   import Connection from "./components/connections/Connection.svelte";
   import InputConnection from "./components/connections/InputConnection.svelte";
   import TableList from "./components/tables/TableList.svelte";
-  import { EllipsisVertical } from "@lucide/svelte";
-  import { dbCredential } from "./states/connection.svelte.js";
-
-  let openedPage = $state("CONNECTION");
+  import Tab from "./components/Tab.svelte";
+  import { getOpenedTab } from "./states/tab.svelte";
 </script>
 
-<main>
+<div class="app">
+  <Tab />
   <div>
-    <div
-      onclick={() => {
-        openedPage = "CONNECTION";
-      }}
-    >
-      <EllipsisVertical />
-    </div>
-    <div>
-      Active Connection: {dbCredential.connection_name}
-    </div>
-    <div
-      onclick={() => {
-        openedPage = "TABLE";
-      }}
-    >
-      Open Table List Tab
-    </div>
-  </div>
-
-  <div>
-    {#if openedPage === "CONNECTION"}
+    {#if getOpenedTab() === "CONNECTION"}
       <Connection />
       <InputConnection />
     {/if}
-    {#if openedPage === "TABLE"}
+    {#if getOpenedTab() === "TABLE"}
       <TableList />
     {/if}
   </div>
-</main>
+</div>
 
 <style>
+  .app {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+  }
 </style>
