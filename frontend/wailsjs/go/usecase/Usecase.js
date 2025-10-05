@@ -17,3 +17,7 @@ export function GetTableRecords(arg1) {
 export function GetTables() {
   return window['go']['usecase']['Usecase']['GetTables']();
 }
+
+export function SaveCredential(arg1) {
+  return window['go']['usecase']['Usecase']['SaveCredential'](arg1);
+}

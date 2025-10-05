@@ -1,5 +1,8 @@
 <script>
-  import { CreateConnection } from "../../../wailsjs/go/usecase/Usecase.js";
+  import {
+    CreateConnection,
+    SaveCredential,
+  } from "../../../wailsjs/go/usecase/Usecase.js";
   import { dbCredential } from "../../states/connection.svelte.js";
 
   async function createConnection(e) {
@@ -9,6 +12,24 @@
       await CreateConnection(dbCredential);
     } catch (err) {
       console.log("Failed to create connection:", err);
+    }
+  }
+
+  async function saveConnection(e) {
+    e.preventDefault();
+
+    try {
+      let req = {
+        title: dbCredential.connection_name,
+        host: dbCredential.host,
+        port: dbCredential.port,
+        user: dbCredential.user,
+        password: dbCredential.password,
+        database_name: dbCredential.database_name,
+      };
+      await SaveCredential(req);
+    } catch (err) {
+      console.log("Failed to save connection:", err);
     }
   }
 </script>
@@ -82,6 +103,7 @@
     </div>
     <div class="connection-form-footer">
       <button type="submit" class="connection-btn-connect">Connect</button>
+      <button class="connection-btn-save" onclick={saveConnection}>Save</button>
     </div>
   </form>
 </div>

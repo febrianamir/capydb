@@ -3,7 +3,6 @@ package usecase
 import (
 	"capydb/backend/config"
 	"context"
-	"database/sql"
 	"os"
 	"path/filepath"
 
@@ -13,7 +12,7 @@ import (
 
 type Usecase struct {
 	dbConn     *gorm.DB
-	dbDataConn *sql.DB
+	dbDataConn *gorm.DB
 }
 
 func appDataDir() (string, error) {
@@ -46,5 +45,5 @@ func NewUsecase(ctx context.Context) *Usecase {
 	}
 
 	usecase.dbDataConn = db
-	return &Usecase{}
+	return usecase
 }

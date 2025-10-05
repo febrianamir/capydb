@@ -10,3 +10,5 @@ export function GetTableColumns(arg1:string):Promise<Array<Record<string, any>>>
 export function GetTableRecords(arg1:request.GetTableRecords):Promise<response.GetTableRecords>;
 
 export function GetTables():Promise<Array<string>>;
+
+export function SaveCredential(arg1:request.SaveCredential):Promise<void>;

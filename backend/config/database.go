@@ -1,14 +1,14 @@
 package config
 
 import (
-	"database/sql"
 	"os"
 	"path/filepath"
 
-	_ "modernc.org/sqlite"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-func InitDB(appDataDir string) (*sql.DB, error) {
+func InitDB(appDataDir string) (*gorm.DB, error) {
 	// Ensure app data directory exists
 	if err := os.MkdirAll(appDataDir, 0755); err != nil {
 		return nil, err
@@ -16,8 +16,7 @@ func InitDB(appDataDir string) (*sql.DB, error) {
 
 	// Place sqlite file inside app's data dir
 	dbPath := filepath.Join(appDataDir, "capydb.db")
-
-	db, err := sql.Open("sqlite", dbPath)
+	db, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
@@ -34,8 +33,8 @@ func InitDB(appDataDir string) (*sql.DB, error) {
 		database_name TEXT NOT NULL
 	);
 	`
-	if _, err := db.Exec(schema); err != nil {
-		return nil, err
+	if result := db.Exec(schema); result.Error != nil {
+		return nil, result.Error
 	}
 
 	return db, nil

@@ -83,6 +83,28 @@ export namespace request {
 		    return a;
 		}
 	}
+	export class SaveCredential {
+	    title: string;
+	    host: string;
+	    port: string;
+	    user: string;
+	    password: string;
+	    database_name: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new SaveCredential(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.title = source["title"];
+	        this.host = source["host"];
+	        this.port = source["port"];
+	        this.user = source["user"];
+	        this.password = source["password"];
+	        this.database_name = source["database_name"];
+	    }
+	}
 
 }
 

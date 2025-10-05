@@ -1,5 +1,5 @@
 <script>
-  import CreateConnection from "./components/connections/CreateConnection.svelte";
+  import CreateConnection from "./components/connections/InputConnection.svelte";
   import TableList from "./components/tables/TableList.svelte";
   import { dbCredential } from "./states/connection.svelte.js";
 
