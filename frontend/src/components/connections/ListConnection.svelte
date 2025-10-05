@@ -21,6 +21,8 @@
     {#each credentials as credential}
       <div class="connection-item">
         {credential.title}
+        {credential.db_vendor}
+        {credential.hex_color}
         {credential.host}
         {credential.port}
         {credential.user}

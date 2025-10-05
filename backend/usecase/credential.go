@@ -14,11 +14,14 @@ func (u *Usecase) SaveCredential(req request.SaveCredential) error {
 
 	err := u.dbDataConn.Create(&model.Credential{
 		Title:        req.Title,
+		DBVendor:     req.DBVendor,
 		Host:         req.Host,
 		Port:         req.Port,
 		User:         req.User,
 		Password:     req.Password,
 		DatabaseName: req.DatabaseName,
+		CreatedAt:    req.CreatedAt,
+		UpdatedAt:    req.UpdatedAt,
 	}).Error
 	if err != nil {
 		return err

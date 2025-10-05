@@ -1,4 +1,5 @@
 <script>
+  import { generateDBTime } from "../../utils/db.js";
   import {
     CreateConnection,
     SaveCredential,
@@ -20,13 +21,17 @@
     e.preventDefault();
 
     try {
+      let timeNow = generateDBTime();
       let req = {
         title: dbCredential.connection_name,
+        db_vendor: dbCredential.db_vendor,
         host: dbCredential.host,
         port: dbCredential.port,
         user: dbCredential.user,
         password: dbCredential.password,
         database_name: dbCredential.database_name,
+        created_at: timeNow,
+        updated_at: timeNow,
       };
       await SaveCredential(req);
     } catch (err) {
@@ -49,6 +54,17 @@
         id="connection_name"
         bind:value={dbCredential.connection_name}
       />
+    </div>
+    <div class="connection-form-item">
+      <label for="db_vendor" class="connection-form-label">Client</label>
+      <select
+        class="connection-form-input"
+        name="db_vendor"
+        id="db_vendor"
+        bind:value={dbCredential.db_vendor}
+      >
+        <option value="PostgreSQL">PostgreSQL</option>
+      </select>
     </div>
     <div class="connection-form-item">
       <label for="host" class="connection-form-label">Host</label>

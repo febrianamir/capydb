@@ -20,11 +20,15 @@ export namespace model {
 	}
 	export class Credential {
 	    title: string;
+	    db_vendor: string;
+	    hex_color: string;
 	    host: string;
 	    port: string;
 	    user: string;
 	    password: string;
 	    database_name: string;
+	    created_at: string;
+	    updated_at: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Credential(source);
@@ -33,11 +37,15 @@ export namespace model {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.title = source["title"];
+	        this.db_vendor = source["db_vendor"];
+	        this.hex_color = source["hex_color"];
 	        this.host = source["host"];
 	        this.port = source["port"];
 	        this.user = source["user"];
 	        this.password = source["password"];
 	        this.database_name = source["database_name"];
+	        this.created_at = source["created_at"];
+	        this.updated_at = source["updated_at"];
 	    }
 	}
 
@@ -119,11 +127,14 @@ export namespace request {
 	}
 	export class SaveCredential {
 	    title: string;
+	    db_vendor: string;
 	    host: string;
 	    port: string;
 	    user: string;
 	    password: string;
 	    database_name: string;
+	    created_at: string;
+	    updated_at: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new SaveCredential(source);
@@ -132,11 +143,14 @@ export namespace request {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.title = source["title"];
+	        this.db_vendor = source["db_vendor"];
 	        this.host = source["host"];
 	        this.port = source["port"];
 	        this.user = source["user"];
 	        this.password = source["password"];
 	        this.database_name = source["database_name"];
+	        this.created_at = source["created_at"];
+	        this.updated_at = source["updated_at"];
 	    }
 	}
 

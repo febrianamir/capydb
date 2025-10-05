@@ -26,11 +26,15 @@ func InitDB(appDataDir string) (*gorm.DB, error) {
 	CREATE TABLE IF NOT EXISTS credentials (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		title TEXT NOT NULL,
+		db_vendor TEXT NOT NULL,
+		hex_color TEXT NOT NULL,
 		host TEXT NOT NULL,
 		port TEXT NOT NULL,
 		user TEXT NOT NULL,
 		password TEXT NOT NULL,
-		database_name TEXT NOT NULL
+		database_name TEXT NOT NULL,
+		created_at TEXT NOT NULL,
+		updated_at TEXT NOT NULL
 	);
 	`
 	if result := db.Exec(schema); result.Error != nil {
