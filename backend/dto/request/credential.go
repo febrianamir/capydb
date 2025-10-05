@@ -8,3 +8,7 @@ type SaveCredential struct {
 	Password     string `json:"password"`
 	DatabaseName string `json:"database_name"`
 }
+
+type GetCredentials struct {
+	Search string `json:"search"`
+}

@@ -1,6 +1,8 @@
 <script>
-  import CreateConnection from "./components/connections/InputConnection.svelte";
+  import Connection from "./components/connections/Connection.svelte";
+  import InputConnection from "./components/connections/InputConnection.svelte";
   import TableList from "./components/tables/TableList.svelte";
+  import { EllipsisVertical } from "@lucide/svelte";
   import { dbCredential } from "./states/connection.svelte.js";
 
   let openedPage = $state("CONNECTION");
@@ -8,13 +10,15 @@
 
 <main>
   <div>
-    Active Connection: {dbCredential.connection_name}
     <div
       onclick={() => {
         openedPage = "CONNECTION";
       }}
     >
-      Open Connection Tab
+      <EllipsisVertical />
+    </div>
+    <div>
+      Active Connection: {dbCredential.connection_name}
     </div>
     <div
       onclick={() => {
@@ -27,7 +31,8 @@
 
   <div>
     {#if openedPage === "CONNECTION"}
-      <CreateConnection />
+      <Connection />
+      <InputConnection />
     {/if}
     {#if openedPage === "TABLE"}
       <TableList />

@@ -18,6 +18,28 @@ export namespace model {
 	        this.second_value = source["second_value"];
 	    }
 	}
+	export class Credential {
+	    title: string;
+	    host: string;
+	    port: string;
+	    user: string;
+	    password: string;
+	    database_name: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Credential(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.title = source["title"];
+	        this.host = source["host"];
+	        this.port = source["port"];
+	        this.user = source["user"];
+	        this.password = source["password"];
+	        this.database_name = source["database_name"];
+	    }
+	}
 
 }
 
@@ -41,6 +63,18 @@ export namespace request {
 	        this.database_name = source["database_name"];
 	        this.user = source["user"];
 	        this.password = source["password"];
+	    }
+	}
+	export class GetCredentials {
+	    search: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new GetCredentials(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.search = source["search"];
 	    }
 	}
 	export class GetTableRecords {
@@ -110,6 +144,38 @@ export namespace request {
 
 export namespace response {
 	
+	export class GetCredentials {
+	    Data: model.Credential[];
+	    Total: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new GetCredentials(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Data = this.convertValues(source["Data"], model.Credential);
+	        this.Total = source["Total"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class GetTableRecords {
 	    Data: any[];
 	    Total: number;
