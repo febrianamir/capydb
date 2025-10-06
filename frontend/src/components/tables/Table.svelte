@@ -6,12 +6,24 @@
     GetTableRecords,
     GetTables,
   } from "../../../wailsjs/go/usecase/Usecase";
-  import { Table } from "@lucide/svelte";
+  import {
+    Table,
+    ArrowDownNarrowWide,
+    ArrowUpWideNarrow,
+  } from "@lucide/svelte";
 
   let isShowTableList = $state(false);
   let tables = $state([]);
   let tableColumns = $state([]);
   let tableRecords = $state([]);
+  let queryTableContents = $state({
+    table_name: "",
+    sort_by: "",
+    order_by: "",
+  });
+  function updateQueryTableContents(query) {
+    queryTableContents = query;
+  }
 
   onMount(async () => {
     try {
@@ -22,14 +34,25 @@
     }
   });
 
-  async function getTableContents(tableName) {
-    try {
-      tableColumns = await GetTableColumns(tableName);
+  $effect(() => {
+    getTableContents(queryTableContents);
+  });
 
-      let req = {
-        table_name: tableName,
+  async function getTableContents(query) {
+    if (query.table_name == "") {
+      return;
+    }
+
+    try {
+      tableColumns = await GetTableColumns(query.table_name);
+
+      let getTableRecordsReq = {
+        table_name: query.table_name,
+        limit: 500,
+        sort_by: query.sort_by,
+        order_by: query.order_by,
       };
-      let tableRecordsRes = await GetTableRecords(req);
+      let tableRecordsRes = await GetTableRecords(getTableRecordsReq);
       tableRecords = tableRecordsRes.Data;
     } catch (err) {
       console.log("Failed to get table contents:", err);
@@ -56,6 +79,28 @@
         return "table-data-cell-yellow";
     }
   }
+
+  function toggleColumnSort(tableColumn) {
+    // If sort_by changed, set order_by back to ASC
+    // If sort_by unchanged, toggle order_by
+    let sortBy = tableColumn.column_name;
+    let orderBy = "";
+    if (tableColumn.column_name != queryTableContents.sort_by) {
+      orderBy = "ASC";
+    } else {
+      if (queryTableContents.order_by == "ASC") {
+        orderBy = "DESC";
+      } else {
+        sortBy = "";
+        orderBy = "";
+      }
+    }
+    updateQueryTableContents({
+      table_name: queryTableContents.table_name,
+      sort_by: sortBy,
+      order_by: orderBy,
+    });
+  }
 </script>
 
 <div class="table">
@@ -70,12 +115,20 @@
               class="table-item"
               onclick={(e) => {
                 e.preventDefault();
-                getTableContents(table);
+                updateQueryTableContents({
+                  table_name: table,
+                  sort_by: "",
+                  order_by: "",
+                });
               }}
               onkeydown={(e) => {
                 handleEnter(e, () => {
                   e.preventDefault();
-                  getTableContents(table);
+                  updateQueryTableContents({
+                    table_name: table,
+                    sort_by: "",
+                    order_by: "",
+                  });
                 });
               }}
             >
@@ -97,7 +150,31 @@
         <thead class="table-data-head">
           <tr>
             {#each tableColumns as tableColumn}
-              <th class="table-data-cell">{tableColumn.column_name}</th>
+              <th
+                class="table-data-cell"
+                onclick={(e) => {
+                  e.preventDefault();
+                  toggleColumnSort(tableColumn);
+                }}
+              >
+                {tableColumn.column_name}
+                <div
+                  class="table-data-cell-sort {tableColumn.column_name ==
+                  queryTableContents.sort_by
+                    ? 'active'
+                    : ''}"
+                >
+                  {#if queryTableContents.order_by == "ASC"}
+                    <div class="table-data-cell-icon">
+                      <ArrowDownNarrowWide size="16" />
+                    </div>
+                  {:else}
+                    <div class="table-data-cell-icon">
+                      <ArrowUpWideNarrow size="16" />
+                    </div>
+                  {/if}
+                </div>
+              </th>
             {/each}
           </tr>
         </thead>
@@ -207,6 +284,25 @@
     border-top: 2px solid var(--color-dark-grey);
     border-bottom: 2px solid var(--color-dark-grey);
     border-left: 2px solid var(--color-dark-grey);
+    cursor: pointer;
+    padding-right: 2rem;
+    position: relative;
+  }
+
+  .table-data-cell-sort {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.4rem;
+    visibility: hidden;
+  }
+
+  .table-data-cell-sort.active {
+    visibility: visible;
+  }
+
+  .table-data-cell-icon {
+    display: flex;
+    align-items: center;
   }
 
   .table-data-body .table-data-cell {
