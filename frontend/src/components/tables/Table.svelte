@@ -8,6 +8,7 @@
   } from "../../../wailsjs/go/usecase/Usecase";
   import {
     Table,
+    RefreshCcw,
     ArrowDownNarrowWide,
     ArrowUpWideNarrow,
   } from "@lucide/svelte";
@@ -146,6 +147,35 @@
   </div>
   <div class="table-content">
     {#if tableColumns.length > 0}
+      <div class="table-toolbar">
+        <div
+          role="button"
+          tabindex="0"
+          class="table-refresh"
+          onclick={(e) => {
+            e.preventDefault();
+            updateQueryTableContents({
+              table_name: queryTableContents.table_name,
+              sort_by: queryTableContents.sort_by,
+              order_by: queryTableContents.order_by,
+            });
+          }}
+          onkeydown={(e) => {
+            handleEnter(e, () => {
+              e.preventDefault();
+              updateQueryTableContents({
+                table_name: queryTableContents.table_name,
+                sort_by: queryTableContents.sort_by,
+                order_by: queryTableContents.order_by,
+              });
+            });
+          }}
+        >
+          <div class="table-refresh-icon">
+            <RefreshCcw size="20" strokeWidth="2.5" />
+          </div>
+        </div>
+      </div>
       <table class="table-data">
         <thead class="table-data-head">
           <tr>
@@ -219,6 +249,7 @@
     min-height: 0;
   }
 
+  /* Table Sidebar */
   .table-sidebar {
     flex: 0 0 250px;
     width: 250px;
@@ -251,12 +282,36 @@
     align-items: center;
   }
 
+  /* Table Content */
   .table-content {
     background-color: var(--color-almost-black);
     flex: 1;
     overflow: auto;
     text-align: left;
     font-size: 14px;
+  }
+
+  .table-toolbar {
+    display: flex;
+    padding: 0.75rem 0.75rem 0 0.75rem;
+  }
+
+  .table-refresh {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: var(--color-dark-grey);
+    border: 1px solid var(--color-dark-grey);
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  .table-refresh:hover {
+    background-color: var(--color-almost-black);
+  }
+
+  .table-refresh-icon {
+    display: flex;
+    align-items: center;
   }
 
   .table-data {
