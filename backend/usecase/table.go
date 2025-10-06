@@ -72,13 +72,13 @@ func (u *Usecase) GetTableRecords(req request.GetTableRecords) (response.GetTabl
 	}
 
 	var records = make([]map[string]any, 0)
-	err := u.dbConn.Debug().Raw(query).Scan(&records).Error
+	err := u.dbConn.Raw(query).Scan(&records).Error
 	if err != nil {
 		return res, err
 	}
 
 	var count int64
-	err = u.dbConn.Debug().Raw(queryCount).Count(&count).Error
+	err = u.dbConn.Raw(queryCount).Count(&count).Error
 	if err != nil {
 		return res, err
 	}
