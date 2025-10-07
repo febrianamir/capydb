@@ -46,29 +46,30 @@ func (u *Usecase) GetTableRecords(req request.GetTableRecords) (response.GetTabl
 	}
 
 	var res response.GetTableRecords
-
 	query := fmt.Sprintf("SELECT * FROM %v", req.TableName)
 	queryCount := fmt.Sprintf("SELECT COUNT(*) FROM %v", req.TableName)
+
 	if len(req.Conditions) > 0 {
 		whereQuery := buildWhereQuery(req.Conditions)
 		query += whereQuery
 		queryCount += whereQuery
 	}
+
 	if req.SortBy != "" {
 		query += buildOrderQuery(model.OrderQueryParam{
 			SortBy:  req.SortBy,
 			OrderBy: req.OrderBy,
 		})
 	}
+
 	if req.Limit > 0 {
 		limitQuery := buildLimitQuery(req.Limit)
 		query += limitQuery
-		queryCount += limitQuery
 	}
+
 	if req.Offset > 0 {
 		offsetQuery := buildOffsetQuery(req.Offset)
 		query += offsetQuery
-		queryCount += offsetQuery
 	}
 
 	var records = make([]map[string]any, 0)

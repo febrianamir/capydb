@@ -11,6 +11,8 @@
     RefreshCcw,
     ArrowDownNarrowWide,
     ArrowUpWideNarrow,
+    ChevronLeft,
+    ChevronRight,
   } from "@lucide/svelte";
 
   let isShowTableList = $state(false);
@@ -23,10 +25,18 @@
     table_name: "",
     sort_by: "",
     order_by: "",
+    offset: 0,
   });
   function updateQueryTableContents(query) {
     queryTableContents = query;
   }
+  let currentPage = $derived.by(() => {
+    if (queryTableContents.offset == 0) {
+      return 1;
+    }
+    return queryTableContents.offset / 500 + 1;
+  });
+  let lastPage = $derived(Math.ceil(tableRecordsTotal / 500));
 
   onMount(async () => {
     try {
@@ -52,6 +62,7 @@
       let getTableRecordsReq = {
         table_name: query.table_name,
         limit: 500,
+        offset: query.offset,
         sort_by: query.sort_by,
         order_by: query.order_by,
       };
@@ -104,6 +115,36 @@
       table_name: queryTableContents.table_name,
       sort_by: sortBy,
       order_by: orderBy,
+      offset: queryTableContents.offset,
+    });
+  }
+
+  function paginationPrevPage() {
+    let newOffset = queryTableContents.offset - 500;
+    if (newOffset < 0) {
+      newOffset = 0;
+    }
+
+    updateQueryTableContents({
+      table_name: queryTableContents.table_name,
+      sort_by: queryTableContents.sort_by,
+      order_by: queryTableContents.order_by,
+      offset: newOffset,
+    });
+  }
+
+  function paginationNextPage() {
+    let prevOffset = queryTableContents.offset;
+    let newOffset = queryTableContents.offset + 500;
+    if (newOffset >= tableRecordsTotal) {
+      newOffset = prevOffset;
+    }
+
+    updateQueryTableContents({
+      table_name: queryTableContents.table_name,
+      sort_by: queryTableContents.sort_by,
+      order_by: queryTableContents.order_by,
+      offset: newOffset,
     });
   }
 </script>
@@ -124,6 +165,7 @@
                   table_name: table,
                   sort_by: "",
                   order_by: "",
+                  offset: queryTableContents.offset,
                 });
               }}
               onkeydown={(e) => {
@@ -133,6 +175,7 @@
                     table_name: table,
                     sort_by: "",
                     order_by: "",
+                    offset: queryTableContents.offset,
                   });
                 });
               }}
@@ -162,6 +205,7 @@
               table_name: queryTableContents.table_name,
               sort_by: queryTableContents.sort_by,
               order_by: queryTableContents.order_by,
+              offset: queryTableContents.offset,
             });
           }}
           onkeydown={(e) => {
@@ -171,12 +215,58 @@
                 table_name: queryTableContents.table_name,
                 sort_by: queryTableContents.sort_by,
                 order_by: queryTableContents.order_by,
+                offset: queryTableContents.offset,
               });
             });
           }}
         >
           <div class="table-refresh-icon">
-            <RefreshCcw size="20" strokeWidth="2.5" />
+            <RefreshCcw size="19" strokeWidth="2.5" />
+          </div>
+        </div>
+        <div class="table-pagination">
+          <div
+            class="table-pagination-prev {currentPage == 1 ? 'disable' : ''}"
+            role="button"
+            tabindex="0"
+            onclick={(e) => {
+              e.preventDefault();
+              paginationPrevPage();
+            }}
+            onkeydown={(e) => {
+              handleEnter(e, () => {
+                e.preventDefault();
+                paginationPrevPage();
+              });
+            }}
+          >
+            <div class="table-pagination-icon">
+              <ChevronLeft size="19" />
+            </div>
+          </div>
+          <div class="table-pagination-page">
+            {currentPage}
+          </div>
+          <div
+            class="table-pagination-next {currentPage == lastPage
+              ? 'disable'
+              : ''}"
+            role="button"
+            tabindex="0"
+            onclick={(e) => {
+              e.preventDefault();
+              paginationNextPage();
+            }}
+            onkeydown={(e) => {
+              handleEnter(e, () => {
+                e.preventDefault();
+                paginationNextPage();
+              });
+            }}
+          >
+            <div class="table-pagination-icon">
+              <ChevronRight size="19" />
+            </div>
           </div>
         </div>
         <div class="table-result-info">
@@ -246,6 +336,7 @@
   :root {
     --color-almost-black: #1d1d1d;
     --color-dark-grey: #252525;
+    --color-dark-grey-2: #3f3f3f;
     --color-carolina-blue: #7591df;
     --color-dark-sage: #52895c;
     --color-dark-peach: #e6865c;
@@ -309,20 +400,67 @@
   }
 
   .table-refresh {
-    padding: 0.5rem;
+    padding: 0.4rem;
     border-radius: 0.5rem;
-    background-color: var(--color-dark-grey);
-    border: 1px solid var(--color-dark-grey);
+    background-color: var(--color-dark-grey-2);
+    border: 1px solid var(--color-dark-grey-2);
     cursor: pointer;
     transition: 0.2s ease;
   }
 
   .table-refresh:hover {
-    background-color: var(--color-almost-black);
+    background-color: var(--color-dark-grey);
   }
 
   .table-refresh-icon {
     display: flex;
+    align-items: center;
+  }
+
+  .table-pagination {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+  }
+
+  .table-pagination-prev,
+  .table-pagination-page,
+  .table-pagination-next {
+    padding: 0.4rem;
+    cursor: pointer;
+    width: 34px;
+    height: 34px;
+    background-color: var(--color-dark-grey-2);
+    transition: 0.2s ease;
+    border: 1px solid var(--color-dark-grey-2);
+    text-align: center;
+  }
+
+  .table-pagination-prev:hover,
+  .table-pagination-page:hover,
+  .table-pagination-next:hover {
+    background-color: var(--color-dark-grey);
+  }
+
+  .table-pagination-prev.disable,
+  .table-pagination-next.disable {
+    background-color: var(--color-dark-grey);
+    color: var(--color-medium-gray);
+  }
+
+  .table-pagination-prev {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+
+  .table-pagination-next {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+
+  .table-pagination .table-pagination-icon {
+    display: flex;
+    justify-content: center;
     align-items: center;
   }
 
