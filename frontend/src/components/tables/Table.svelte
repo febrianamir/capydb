@@ -17,6 +17,8 @@
   let tables = $state([]);
   let tableColumns = $state([]);
   let tableRecords = $state([]);
+  let tableRecordsCount = $state(0);
+  let tableRecordsTotal = $state(0);
   let queryTableContents = $state({
     table_name: "",
     sort_by: "",
@@ -55,6 +57,8 @@
       };
       let tableRecordsRes = await GetTableRecords(getTableRecordsReq);
       tableRecords = tableRecordsRes.Data;
+      tableRecordsCount = tableRecordsRes.Data.length;
+      tableRecordsTotal = tableRecordsRes.Total;
     } catch (err) {
       console.log("Failed to get table contents:", err);
     }
@@ -175,6 +179,12 @@
             <RefreshCcw size="20" strokeWidth="2.5" />
           </div>
         </div>
+        <div class="table-result-info">
+          <div class="table-result-info-count">
+            Results: {tableRecordsCount}
+          </div>
+          <div class="table-result-info-total">Total: {tableRecordsTotal}</div>
+        </div>
       </div>
       <table class="table-data">
         <thead class="table-data-head">
@@ -293,6 +303,8 @@
 
   .table-toolbar {
     display: flex;
+    align-items: center;
+    gap: 0.5rem;
     padding: 0.75rem 0.75rem 0 0.75rem;
   }
 
@@ -312,6 +324,12 @@
   .table-refresh-icon {
     display: flex;
     align-items: center;
+  }
+
+  .table-result-info {
+    display: flex;
+    gap: 1rem;
+    font-size: 16px;
   }
 
   .table-data {
