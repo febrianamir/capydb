@@ -5,6 +5,7 @@
     ChevronLeft,
     ChevronRight,
     Search,
+    SlidersHorizontal,
   } from "@lucide/svelte";
 
   let {
@@ -16,7 +17,11 @@
     tableColumns,
     tableRecordsCount,
     tableRecordsTotal,
+    setColumnsVisibility,
   } = $props();
+
+  let isShowColumnVisibilityInput = $state(false);
+  let columnsVisibilityInputRel;
 
   function paginationPrevPage() {
     let newOffset = queryTableContents.offset - 500;
@@ -55,6 +60,14 @@
       offset: queryTableContents.offset,
       conditions: queryTableContents.conditions,
     });
+  }
+
+  function toggleColumnVisibility() {
+    if (isShowColumnVisibilityInput) {
+      let columns = columnsVisibilityInputRel.value;
+      setColumnsVisibility(columns);
+    }
+    isShowColumnVisibilityInput = !isShowColumnVisibilityInput;
   }
 </script>
 
@@ -140,6 +153,57 @@
       <Search size="19" strokeWidth="2.5" />
     </div>
   </div>
+  <div
+    role="button"
+    tabindex="0"
+    class="table-toggle-column"
+    onclick={(e) => {
+      e.preventDefault();
+      toggleColumnVisibility();
+    }}
+    onkeydown={(e) => {
+      handleEnter(e, () => {
+        e.preventDefault();
+        toggleColumnVisibility();
+      });
+    }}
+  >
+    <div class="table-toggle-column-icon">
+      <SlidersHorizontal size="19" strokeWidth="2.5" />
+    </div>
+    <div class="table-toggle-column-text">Columns</div>
+    <div
+      role="button"
+      tabindex="0"
+      class="table-column-visibility {isShowColumnVisibilityInput
+        ? 'active'
+        : ''}"
+      onclick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      onkeydown={(e) => {
+        handleEnter(e, () => {
+          e.preventDefault();
+          e.stopPropagation();
+        });
+      }}
+    >
+      <div class="table-column-visibility-info">
+        Select columns to show, separate by comma
+      </div>
+      <textarea
+        class="table-column-visibility-input"
+        bind:this={columnsVisibilityInputRel}
+        onkeydown={(e) => {
+          handleEnter(e, () => {
+            e.preventDefault();
+            toggleColumnVisibility();
+          });
+        }}
+      ></textarea>
+    </div>
+  </div>
   <div class="table-result-info">
     <div class="table-result-info-count">
       Results: {tableRecordsCount}
@@ -174,6 +238,63 @@
   .table-refresh-icon {
     display: flex;
     align-items: center;
+  }
+
+  /* Table Column */
+  .table-toggle-column {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0.35rem 0.6rem;
+    border-radius: 0.5rem;
+    background-color: var(--color-dark-grey-2);
+    border: 1px solid var(--color-dark-grey-2);
+    cursor: pointer;
+    gap: 0.5rem;
+    font-size: 15px;
+    transition: 0.2s ease;
+  }
+
+  .table-toggle-column-icon {
+    display: flex;
+    align-items: center;
+  }
+
+  .table-column-visibility {
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    padding: 0.35rem 0.6rem 0.6rem 0.6rem;
+    border-radius: 0.5rem;
+    pointer-events: none;
+    transition: 0.2s ease;
+    background-color: var(--color-dark-grey);
+    border: 1px solid var(--color-dark-grey-2);
+    width: 300px;
+    font-size: 13px;
+    z-index: 1000;
+  }
+
+  .table-column-visibility.active {
+    top: 37px;
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .table-column-visibility-input {
+    outline: none;
+    width: 100%;
+    min-height: 5rem;
+    border: 1px solid var(--color-dark-grey-2);
+    border-radius: 0.2rem;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    margin-top: 0.5rem;
+    padding: 0.2rem;
+    font-size: 12px;
+    font-family: "JetBrains Mono", monospace;
   }
 
   /* Table Pagination */
@@ -228,7 +349,7 @@
   .table-result-info {
     display: flex;
     gap: 1rem;
-    font-size: 16px;
+    font-size: 15px;
   }
 
   /* Table Toggle Filter */

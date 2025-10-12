@@ -35,6 +35,8 @@
     return queryTableContents.offset / 500 + 1;
   });
   let lastPage = $derived(Math.ceil(tableRecordsTotal / 500));
+  // Empty columnsVisibility means every columns is visible
+  let columnsVisibility = $state([]);
 
   onMount(async () => {
     try {
@@ -86,6 +88,15 @@
       });
     }
   }
+
+  function setColumnsVisibility(columns) {
+    let trimmedColumns = columns.trim();
+    if (trimmedColumns.length > 0) {
+      columnsVisibility = trimmedColumns.split(",").map((s) => s.trim());
+    } else {
+      columnsVisibility = [];
+    }
+  }
 </script>
 
 <div class="table">
@@ -106,6 +117,7 @@
         {tableColumns}
         {tableRecordsCount}
         {tableRecordsTotal}
+        {setColumnsVisibility}
       />
       <TableFilter
         {isShowTableFilter}
@@ -115,6 +127,7 @@
         {tableColumns}
       />
       <TableRecord
+        {columnsVisibility}
         {queryTableContents}
         {updateQueryTableContents}
         {tableColumns}
@@ -125,19 +138,6 @@
 </div>
 
 <style>
-  :root {
-    --color-almost-black: #1d1d1d;
-    --color-dark-grey: #252525;
-    --color-dark-grey-2: #3f3f3f;
-    --color-carolina-blue: #7591df;
-    --color-carolina-blue-1: #6883db;
-    --color-carolina-blue-2: #5875d3;
-    --color-dark-sage: #52895c;
-    --color-dark-peach: #e6865c;
-    --color-medium-gray: #808080;
-    --color-light-mustard: #cca642;
-  }
-
   .table {
     display: flex;
     flex: 1;

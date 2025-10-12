@@ -6,6 +6,7 @@
     updateQueryTableContents,
     tableColumns,
     tableRecords,
+    columnsVisibility,
   } = $props();
 
   function getColumnTypeColorClass(type, data) {
@@ -57,31 +58,33 @@
   <thead class="table-record-head">
     <tr>
       {#each tableColumns as tableColumn}
-        <th
-          class="table-record-cell"
-          onclick={(e) => {
-            e.preventDefault();
-            toggleColumnSort(tableColumn);
-          }}
-        >
-          {tableColumn.column_name}
-          <div
-            class="table-record-cell-sort {tableColumn.column_name ==
-            queryTableContents.sort_by
-              ? 'active'
-              : ''}"
+        {#if columnsVisibility.length == 0 || (columnsVisibility.length > 0 && columnsVisibility.includes(tableColumn.column_name))}
+          <th
+            class="table-record-cell"
+            onclick={(e) => {
+              e.preventDefault();
+              toggleColumnSort(tableColumn);
+            }}
           >
-            {#if queryTableContents.order_by == "ASC"}
-              <div class="table-record-cell-icon">
-                <ArrowDownNarrowWide size="16" />
-              </div>
-            {:else}
-              <div class="table-record-cell-icon">
-                <ArrowUpWideNarrow size="16" />
-              </div>
-            {/if}
-          </div>
-        </th>
+            {tableColumn.column_name}
+            <div
+              class="table-record-cell-sort {tableColumn.column_name ==
+              queryTableContents.sort_by
+                ? 'active'
+                : ''}"
+            >
+              {#if queryTableContents.order_by == "ASC"}
+                <div class="table-record-cell-icon">
+                  <ArrowDownNarrowWide size="16" />
+                </div>
+              {:else}
+                <div class="table-record-cell-icon">
+                  <ArrowUpWideNarrow size="16" />
+                </div>
+              {/if}
+            </div>
+          </th>
+        {/if}
       {/each}
     </tr>
   </thead>
@@ -90,15 +93,18 @@
       {#each tableRecords as tableRecord}
         <tr>
           {#each tableColumns as tableColumn}
-            <td
-              class="table-record-cell {getColumnTypeColorClass(
-                tableColumn.data_type,
-                tableRecord[tableColumn.column_name],
-              )}"
-              >{tableRecord[tableColumn.column_name] === null
-                ? "NULL"
-                : tableRecord[tableColumn.column_name]}</td
-            >
+            {#if columnsVisibility.length == 0 || (columnsVisibility.length > 0 && columnsVisibility.includes(tableColumn.column_name))}
+              <td
+                class="table-record-cell {getColumnTypeColorClass(
+                  tableColumn.data_type,
+                  tableRecord[tableColumn.column_name],
+                )}"
+              >
+                {tableRecord[tableColumn.column_name] === null
+                  ? "NULL"
+                  : tableRecord[tableColumn.column_name]}
+              </td>
+            {/if}
           {/each}
         </tr>
       {/each}
