@@ -7,7 +7,6 @@
     GetTables,
   } from "../../../wailsjs/go/usecase/Usecase";
   import {
-    Table,
     RefreshCcw,
     ArrowDownNarrowWide,
     ArrowUpWideNarrow,
@@ -19,6 +18,7 @@
     Check,
     ChevronsUpDown,
   } from "@lucide/svelte";
+  import TableSidebar from "./TableSidebar.svelte";
 
   const operators = [
     "=",
@@ -87,8 +87,6 @@
   });
 
   async function getTableContents(query) {
-    console.log("> executed");
-    console.log("> query:", query);
     if (query.table_name == "") {
       return;
     }
@@ -171,7 +169,6 @@
   }
 
   function updateFilterActiveStatus(index, checked) {
-    console.log("> checked:", checked);
     filters = filters.map((f, i) =>
       i === index ? { ...f, isActive: checked } : f,
     );
@@ -252,48 +249,12 @@
 </script>
 
 <div class="table">
-  <div class="table-sidebar">
-    {#if isShowTableList}
-      {#if tables.length > 0}
-        <div class="table-list">
-          {#each tables as table}
-            <div
-              role="button"
-              tabindex="0"
-              class="table-item"
-              onclick={(e) => {
-                e.preventDefault();
-                updateQueryTableContents({
-                  table_name: table,
-                  sort_by: "",
-                  order_by: "",
-                  offset: queryTableContents.offset,
-                });
-              }}
-              onkeydown={(e) => {
-                handleEnter(e, () => {
-                  e.preventDefault();
-                  updateQueryTableContents({
-                    table_name: table,
-                    sort_by: "",
-                    order_by: "",
-                    offset: queryTableContents.offset,
-                  });
-                });
-              }}
-            >
-              <div class="table-item-icon">
-                <Table size="15" />
-              </div>
-              <div class="table-item-text">
-                {table}
-              </div>
-            </div>
-          {/each}
-        </div>
-      {/if}
-    {/if}
-  </div>
+  <TableSidebar
+    {isShowTableList}
+    {tables}
+    {updateQueryTableContents}
+    {queryTableContents}
+  />
   <div class="table-explorer">
     {#if tableColumns.length > 0}
       <div class="table-toolbar">
@@ -606,39 +567,6 @@
     display: flex;
     flex: 1;
     min-height: 0;
-  }
-
-  /* Table Sidebar */
-  .table-sidebar {
-    flex: 0 0 250px;
-    width: 250px;
-    min-width: 0;
-    overflow: auto;
-  }
-
-  .table-list {
-    width: max-content;
-    font-size: 14px;
-    padding: 0.75rem;
-    margin: 0;
-  }
-
-  .table-item {
-    display: flex;
-    align-items: center;
-    padding: 0.2rem 0.4rem;
-    gap: 0.2rem;
-    transition: 0.2s ease;
-    border-radius: 0.3rem;
-  }
-
-  .table-item:hover {
-    background-color: #333333;
-  }
-
-  .table-item-icon {
-    display: flex;
-    align-items: center;
   }
 
   /* Table Explorer */
