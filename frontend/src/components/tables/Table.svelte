@@ -73,19 +73,6 @@
       console.log("Failed to get table contents:", err);
     }
   }
-
-  function toggleTableFilter(defaultColumn) {
-    isShowTableFilter = !isShowTableFilter;
-    if (filters.length == 0) {
-      filters.push({
-        isActive: true,
-        field: defaultColumn,
-        operator: "=",
-        firstValue: "",
-        secondValue: "",
-      });
-    }
-  }
 </script>
 
 <div class="table">
@@ -102,10 +89,11 @@
         {lastPage}
         {queryTableContents}
         {updateQueryTableContents}
-        {toggleTableFilter}
         {tableColumns}
         {tableRecordsCount}
         {tableRecordsTotal}
+        {filters}
+        {isShowTableFilter}
       />
       <TableFilter
         {isShowTableFilter}
