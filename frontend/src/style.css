@@ -19,6 +19,16 @@
 :root {
   --color-bg: #222222;
   --color-text: #d2d2d2;
+  --color-almost-black: #1d1d1d;
+  --color-dark-grey: #252525;
+  --color-dark-grey-2: #3f3f3f;
+  --color-carolina-blue: #7591df;
+  --color-carolina-blue-1: #6883db;
+  --color-carolina-blue-2: #5875d3;
+  --color-dark-sage: #52895c;
+  --color-dark-peach: #e6865c;
+  --color-medium-gray: #808080;
+  --color-light-mustard: #cca642;
 }
 
 /* Defaults */

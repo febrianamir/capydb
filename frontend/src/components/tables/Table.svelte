@@ -59,7 +59,7 @@
 
       let getTableRecordsReq = {
         table_name: query.table_name,
-        limit: 500,
+        limit: 500, // Default limit per page
         offset: query.offset,
         sort_by: query.sort_by,
         order_by: query.order_by,

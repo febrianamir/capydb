@@ -46,6 +46,16 @@
       offset: newOffset,
     });
   }
+
+  function refreshTableRecords() {
+    updateQueryTableContents({
+      table_name: queryTableContents.table_name,
+      sort_by: queryTableContents.sort_by,
+      order_by: queryTableContents.order_by,
+      offset: queryTableContents.offset,
+      conditions: queryTableContents.conditions,
+    });
+  }
 </script>
 
 <div class="table-toolbar">
@@ -55,22 +65,12 @@
     class="table-refresh"
     onclick={(e) => {
       e.preventDefault();
-      updateQueryTableContents({
-        table_name: queryTableContents.table_name,
-        sort_by: queryTableContents.sort_by,
-        order_by: queryTableContents.order_by,
-        offset: queryTableContents.offset,
-      });
+      refreshTableRecords();
     }}
     onkeydown={(e) => {
       handleEnter(e, () => {
         e.preventDefault();
-        updateQueryTableContents({
-          table_name: queryTableContents.table_name,
-          sort_by: queryTableContents.sort_by,
-          order_by: queryTableContents.order_by,
-          offset: queryTableContents.offset,
-        });
+        refreshTableRecords();
       });
     }}
   >
