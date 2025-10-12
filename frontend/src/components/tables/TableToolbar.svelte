@@ -12,13 +12,40 @@
     lastPage,
     queryTableContents,
     updateQueryTableContents,
-    paginationPrevPage,
-    paginationNextPage,
     toggleTableFilter,
     tableColumns,
     tableRecordsCount,
     tableRecordsTotal,
   } = $props();
+
+  function paginationPrevPage() {
+    let newOffset = queryTableContents.offset - 500;
+    if (newOffset < 0) {
+      newOffset = 0;
+    }
+
+    updateQueryTableContents({
+      table_name: queryTableContents.table_name,
+      sort_by: queryTableContents.sort_by,
+      order_by: queryTableContents.order_by,
+      offset: newOffset,
+    });
+  }
+
+  function paginationNextPage() {
+    let prevOffset = queryTableContents.offset;
+    let newOffset = queryTableContents.offset + 500;
+    if (newOffset >= tableRecordsTotal) {
+      newOffset = prevOffset;
+    }
+
+    updateQueryTableContents({
+      table_name: queryTableContents.table_name,
+      sort_by: queryTableContents.sort_by,
+      order_by: queryTableContents.order_by,
+      offset: newOffset,
+    });
+  }
 </script>
 
 <div class="table-toolbar">
