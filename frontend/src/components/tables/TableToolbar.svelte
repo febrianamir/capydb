@@ -12,25 +12,11 @@
     lastPage,
     queryTableContents,
     updateQueryTableContents,
+    toggleTableFilter,
     tableColumns,
     tableRecordsCount,
     tableRecordsTotal,
-    isShowTableFilter,
-    filters,
   } = $props();
-
-  function toggleTableFilter(defaultColumn) {
-    isShowTableFilter = !isShowTableFilter;
-    if (filters.length == 0) {
-      filters.push({
-        isActive: true,
-        field: defaultColumn,
-        operator: "=",
-        firstValue: "",
-        secondValue: "",
-      });
-    }
-  }
 
   function paginationPrevPage() {
     let newOffset = queryTableContents.offset - 500;
