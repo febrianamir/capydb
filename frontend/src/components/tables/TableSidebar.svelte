@@ -1,6 +1,7 @@
 <script>
   import { handleEnter } from "../../utils/key";
   import { Table } from "@lucide/svelte";
+  import { onMount, onDestroy } from "svelte";
 
   let {
     isShowTableList,
@@ -8,28 +9,47 @@
     updateQueryTableContents,
     queryTableContents,
   } = $props();
+
+  let isTableSidebarResizing = $state(false);
+  let tableSidebarWidth = $state(250); // Default width
+
+  function startResize(e) {
+    e.preventDefault();
+    isTableSidebarResizing = true;
+  }
+
+  function stopResize() {
+    isTableSidebarResizing = false;
+  }
+
+  function onMouseMove(e) {
+    if (isTableSidebarResizing) {
+      tableSidebarWidth = Math.max(200, e.clientX); // Minimum width = 200px
+    }
+  }
+
+  onMount(() => {
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", stopResize);
+  });
+
+  onDestroy(() => {
+    window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("mouseup", stopResize);
+  });
 </script>
 
 <div class="table-sidebar">
-  {#if isShowTableList}
-    {#if tables.length > 0}
-      <div class="table-list">
-        {#each tables as table}
-          <div
-            role="button"
-            tabindex="0"
-            class="table-item"
-            onclick={(e) => {
-              e.preventDefault();
-              updateQueryTableContents({
-                table_name: table,
-                sort_by: "",
-                order_by: "",
-                offset: queryTableContents.offset,
-              });
-            }}
-            onkeydown={(e) => {
-              handleEnter(e, () => {
+  <div class="table-sidebar-content" style="width: {tableSidebarWidth}px">
+    {#if isShowTableList}
+      {#if tables.length > 0}
+        <div class="table-list">
+          {#each tables as table}
+            <div
+              role="button"
+              tabindex="0"
+              class="table-item"
+              onclick={(e) => {
                 e.preventDefault();
                 updateQueryTableContents({
                   table_name: table,
@@ -37,27 +57,47 @@
                   order_by: "",
                   offset: queryTableContents.offset,
                 });
-              });
-            }}
-          >
-            <div class="table-item-icon">
-              <Table size="15" />
+              }}
+              onkeydown={(e) => {
+                handleEnter(e, () => {
+                  e.preventDefault();
+                  updateQueryTableContents({
+                    table_name: table,
+                    sort_by: "",
+                    order_by: "",
+                    offset: queryTableContents.offset,
+                  });
+                });
+              }}
+            >
+              <div class="table-item-icon">
+                <Table size="15" />
+              </div>
+              <div class="table-item-text">
+                {table}
+              </div>
             </div>
-            <div class="table-item-text">
-              {table}
-            </div>
-          </div>
-        {/each}
-      </div>
+          {/each}
+        </div>
+      {/if}
     {/if}
-  {/if}
+  </div>
+  <div
+    class="table-sidebar-resizer"
+    role="button"
+    tabindex="0"
+    class:active={isTableSidebarResizing}
+    onmousedown={startResize}
+  ></div>
 </div>
 
 <style>
   /* Table Sidebar */
   .table-sidebar {
-    flex: 0 0 250px;
-    width: 250px;
+    display: flex;
+  }
+
+  .table-sidebar-content {
     min-width: 0;
     overflow: auto;
   }
@@ -85,5 +125,19 @@
   .table-item-icon {
     display: flex;
     align-items: center;
+  }
+
+  /* Table Sidebar Resizer */
+  .table-sidebar-resizer {
+    width: 2px;
+    cursor: ew-resize;
+    height: 100%;
+    flex-shrink: 0;
+    background-color: #1e1e1e;
+  }
+
+  .table-sidebar-resizer:hover,
+  .table-sidebar-resizer.active {
+    background-color: #9d9d9d;
   }
 </style>
