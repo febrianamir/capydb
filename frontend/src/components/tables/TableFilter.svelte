@@ -42,10 +42,8 @@
   ];
   const twoColumnOperators = ["BETWEEN"];
 
-  function updateFilterActiveStatus(index, checked) {
-    filters = filters.map((f, i) =>
-      i === index ? { ...f, isActive: checked } : f,
-    );
+  function toggleFilterActiveStatus(filter) {
+    filter.isActive = !filter.isActive;
   }
 
   // resizeSelectInput width based on choosed value
@@ -101,7 +99,7 @@
           <input
             type="checkbox"
             name="active"
-            onchange={(e) => updateFilterActiveStatus(i, e.target.checked)}
+            onchange={(e) => toggleFilterActiveStatus(filter)}
             class="table-filter-check-input"
           />
           <div
