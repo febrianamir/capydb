@@ -133,92 +133,98 @@
   });
 </script>
 
-<table class="table-record">
-  <colgroup>
-    {#each tableColumns as tableColumn, i}
-      {#if isColumnVisible(tableColumn.column_name)}
-        <col
-          bind:this={cols[i]}
-          style="width: {getColumnInitialWidth(
-            tableColumn.column_name,
-            tableColumn.data_type,
-          )}px;"
-        />
-      {/if}
-    {/each}
-  </colgroup>
-  <thead class="table-record-head">
-    <tr>
+<div class="table-record-container">
+  <table class="table-record">
+    <colgroup>
       {#each tableColumns as tableColumn, i}
         {#if isColumnVisible(tableColumn.column_name)}
-          <th
-            class="table-record-cell"
-            onclick={(e) => {
-              e.preventDefault();
-              if (isColResizeActive) return;
-              toggleColumnSort(tableColumn);
-            }}
-          >
-            {tableColumn.column_name}
-            <div
-              class="table-record-cell-sort {tableColumn.column_name ==
-              queryTableContents.sort_by
-                ? 'active'
-                : ''}"
-            >
-              {#if queryTableContents.order_by == "ASC"}
-                <div class="table-record-cell-icon">
-                  <ArrowDownNarrowWide size="16" />
-                </div>
-              {:else}
-                <div class="table-record-cell-icon">
-                  <ArrowUpWideNarrow size="16" />
-                </div>
-              {/if}
-            </div>
-            <div
-              role="button"
-              tabindex="0"
-              class="table-record-cell-resizer"
-              onmousedown={(e) => startResize(e, i)}
-            ></div>
-          </th>
+          <col
+            bind:this={cols[i]}
+            style="width: {getColumnInitialWidth(
+              tableColumn.column_name,
+              tableColumn.data_type,
+            )}px;"
+          />
         {/if}
       {/each}
-    </tr>
-  </thead>
-  <tbody class="table-record-body">
-    {#if tableRecords.length > 0}
-      {#each tableRecords as tableRecord}
-        <tr>
-          {#each tableColumns as tableColumn}
-            {#if isColumnVisible(tableColumn.column_name)}
-              <td
-                class="table-record-cell {getColumnTypeColorClass(
-                  tableColumn.data_type,
-                  tableRecord[tableColumn.column_name],
-                )}"
+    </colgroup>
+    <thead class="table-record-head">
+      <tr>
+        {#each tableColumns as tableColumn, i}
+          {#if isColumnVisible(tableColumn.column_name)}
+            <th
+              class="table-record-cell"
+              onclick={(e) => {
+                e.preventDefault();
+                if (isColResizeActive) return;
+                toggleColumnSort(tableColumn);
+              }}
+            >
+              {tableColumn.column_name}
+              <div
+                class="table-record-cell-sort {tableColumn.column_name ==
+                queryTableContents.sort_by
+                  ? 'active'
+                  : ''}"
               >
-                {tableRecord[tableColumn.column_name] === null
-                  ? "NULL"
-                  : tableRecord[tableColumn.column_name]}
-              </td>
-            {/if}
-          {/each}
-        </tr>
-      {/each}
-    {/if}
-  </tbody>
-</table>
+                {#if queryTableContents.order_by == "ASC"}
+                  <div class="table-record-cell-icon">
+                    <ArrowDownNarrowWide size="16" />
+                  </div>
+                {:else}
+                  <div class="table-record-cell-icon">
+                    <ArrowUpWideNarrow size="16" />
+                  </div>
+                {/if}
+              </div>
+              <div
+                role="button"
+                tabindex="0"
+                class="table-record-cell-resizer"
+                onmousedown={(e) => startResize(e, i)}
+              ></div>
+            </th>
+          {/if}
+        {/each}
+      </tr>
+    </thead>
+    <tbody class="table-record-body">
+      {#if tableRecords.length > 0}
+        {#each tableRecords as tableRecord}
+          <tr>
+            {#each tableColumns as tableColumn}
+              {#if isColumnVisible(tableColumn.column_name)}
+                <td
+                  class="table-record-cell {getColumnTypeColorClass(
+                    tableColumn.data_type,
+                    tableRecord[tableColumn.column_name],
+                  )}"
+                >
+                  {tableRecord[tableColumn.column_name] === null
+                    ? "NULL"
+                    : tableRecord[tableColumn.column_name]}
+                </td>
+              {/if}
+            {/each}
+          </tr>
+        {/each}
+      {/if}
+    </tbody>
+  </table>
+</div>
 
 <style>
   /* Table Record */
+  .table-record-container {
+    flex: 1;
+    overflow: auto;
+  }
+
   .table-record {
-    /* width: max-content; */
     width: 100%;
     table-layout: fixed;
     border-spacing: 0;
-    padding: 0.75rem;
+    padding: 0 0.75rem 1.5rem 0.75rem;
   }
 
   .table-record-head {

@@ -237,7 +237,7 @@
 
   .table-filter-item {
     display: flex;
-    padding: 1rem 1rem 0 1rem;
+    padding: 0 1rem 1rem 1rem;
     align-items: center;
     gap: 1rem;
   }
@@ -351,8 +351,7 @@
   .table-filter-buttons {
     display: flex;
     justify-content: flex-end;
-    padding: 0 1rem;
-    margin-top: 1rem;
+    padding: 0 1rem 0.5rem 1rem;
     gap: 0.75rem;
     align-items: center;
   }

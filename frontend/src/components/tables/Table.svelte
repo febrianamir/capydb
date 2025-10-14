@@ -26,9 +26,11 @@
 
   /* Table Explorer */
   .table-explorer {
+    display: flex;
+    flex-direction: column;
     background-color: var(--color-almost-black);
     flex: 1;
-    overflow: auto;
+    overflow: hidden;
     text-align: left;
     font-size: 14px;
   }
