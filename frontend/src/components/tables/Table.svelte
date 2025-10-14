@@ -11,7 +11,7 @@
   <TableSidebar />
   <div class="table-explorer">
     <TableTabs />
-    {#each tableTabs.tabs as tableTab}
+    {#each tableTabs.tabs as tableTab (tableTab.tableName)}
       <TableTab tableName={tableTab.tableName} />
     {/each}
   </div>
