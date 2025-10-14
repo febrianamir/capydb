@@ -2,14 +2,11 @@
   import { handleEnter } from "../../utils/key";
   import { Table } from "@lucide/svelte";
   import { onMount, onDestroy } from "svelte";
+  import { GetTables } from "../../../wailsjs/go/usecase/Usecase";
+  import { addTableTab } from "../../states/tables.svelte";
 
-  let {
-    isShowTableList,
-    tables,
-    updateQueryTableContents,
-    queryTableContents,
-  } = $props();
-
+  let tables = $state([]);
+  let isShowTableList = $state(false);
   let isTableSidebarResizing = $state(false);
   let tableSidebarWidth = $state(250); // Default width
 
@@ -27,6 +24,15 @@
       tableSidebarWidth = Math.max(200, e.clientX); // Minimum width = 200px
     }
   }
+
+  onMount(async () => {
+    try {
+      tables = await GetTables();
+      isShowTableList = true;
+    } catch (err) {
+      console.log("Failed to get table list:", err);
+    }
+  });
 
   onMount(() => {
     window.addEventListener("mousemove", onMouseMove);
@@ -51,22 +57,12 @@
               class="table-item"
               onclick={(e) => {
                 e.preventDefault();
-                updateQueryTableContents({
-                  table_name: table,
-                  sort_by: "",
-                  order_by: "",
-                  offset: queryTableContents.offset,
-                });
+                addTableTab(table);
               }}
               onkeydown={(e) => {
                 handleEnter(e, () => {
                   e.preventDefault();
-                  updateQueryTableContents({
-                    table_name: table,
-                    sort_by: "",
-                    order_by: "",
-                    offset: queryTableContents.offset,
-                  });
+                  addTableTab(table);
                 });
               }}
             >

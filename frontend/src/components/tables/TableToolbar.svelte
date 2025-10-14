@@ -204,6 +204,7 @@
       ></textarea>
     </div>
   </div>
+  <div class="table-toolbar-separator"></div>
   <div class="table-result-info">
     <div class="table-result-info-count">
       Results: {tableRecordsCount}
@@ -350,6 +351,7 @@
     display: flex;
     gap: 1rem;
     font-size: 15px;
+    padding-right: 1rem;
   }
 
   /* Table Toggle Filter */
@@ -369,5 +371,10 @@
   .table-toggle-filter-icon {
     display: flex;
     align-items: center;
+  }
+
+  /* Table Toolbar Separator  */
+  .table-toolbar-separator {
+    flex: 1;
   }
 </style>
