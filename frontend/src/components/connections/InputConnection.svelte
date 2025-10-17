@@ -5,6 +5,7 @@
     SaveCredential,
   } from "../../../wailsjs/go/usecase/Usecase.js";
   import { dbCredential } from "../../states/connection.svelte.js";
+  import { Cable, Save } from "@lucide/svelte";
 
   async function createConnection(e) {
     e.preventDefault();
@@ -40,8 +41,8 @@
   }
 </script>
 
-<div>
-  <h3>Connect to DB</h3>
+<div class="connection-input-container">
+  <h3 class="connection-input-header">CONNECT TO DB</h3>
   <form onsubmit={createConnection} class="connection-form">
     <div class="connection-form-item">
       <label for="connection_name" class="connection-form-label">
@@ -119,8 +120,92 @@
       />
     </div>
     <div class="connection-form-footer">
-      <button type="submit" class="connection-btn-connect">Connect</button>
-      <button class="connection-btn-save" onclick={saveConnection}>Save</button>
+      <button class="connection-btn-save" onclick={saveConnection}>
+        <div class="connection-btn-icon">
+          <Save size="14" />
+        </div>
+        <div class="connection-btn-text">Save</div>
+      </button>
+      <button type="submit" class="connection-btn-connect">
+        <div class="connection-btn-icon">
+          <Cable size="14" />
+        </div>
+        <div class="connection-btn-text">Connect</div>
+      </button>
     </div>
   </form>
 </div>
+
+<style>
+  .connection-input-container {
+    flex: 1;
+  }
+
+  .connection-input-header {
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .connection-form {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    max-width: 520px;
+    background-color: var(--color-dark-grey-3);
+  }
+
+  .connection-form-item {
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.5rem;
+  }
+
+  .connection-form-label {
+    display: block;
+    width: 175px;
+    font-size: 1rem;
+  }
+
+  .connection-form-input {
+    outline: none;
+    flex: 1;
+    color: var(--color-text);
+    background-color: var(--color-dark-grey);
+    border-radius: 0.25rem;
+    border: 1px solid var(--color-dark-grey-2);
+    padding: 0.4rem 0.8rem;
+  }
+
+  .connection-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.75rem 0 0 0;
+    gap: 0.75rem;
+  }
+
+  .connection-btn-save,
+  .connection-btn-connect {
+    display: flex;
+    align-items: center;
+    padding: 0.3rem 0.6rem;
+    gap: 0.4rem;
+    color: var(--color-text);
+    border-radius: 0.25rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .connection-btn-save {
+    background-color: var(--color-dark-peach-2);
+  }
+
+  .connection-btn-connect {
+    background-color: var(--color-dark-sage);
+  }
+
+  .connection-btn-icon {
+    display: flex;
+    align-items: center;
+  }
+</style>

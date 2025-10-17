@@ -4,10 +4,7 @@
 </script>
 
 <div class="connection">
-  <div>
-    <h2 class="connection-header">ALL CONNECTIONS</h2>
-    <ListConnection />
-  </div>
+  <ListConnection />
   <InputConnection />
 </div>
 

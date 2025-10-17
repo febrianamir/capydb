@@ -3,6 +3,7 @@
   import { GetCredentials } from "../../../wailsjs/go/usecase/Usecase";
   import { Server, User, Database } from "@lucide/svelte";
   import { dbCredential } from "../../states/connection.svelte";
+  import { handleEnter } from "../../utils/key";
 
   let credentials = $state([]);
 
@@ -28,54 +29,84 @@
   }
 </script>
 
-<div class="connection-list">
-  {#if credentials.length > 0}
-    {#each credentials as credential}
-      <div class="connection-item" onclick={() => fillCredential(credential)}>
-        <div class="connection-db-vendor">
-          {credential.db_vendor}
+<div class="connection-list-container">
+  <h2 class="connection-header">ALL CONNECTIONS</h2>
+  <div class="connection-list">
+    {#if credentials.length > 0}
+      {#each credentials as credential}
+        <div
+          class="connection-item"
+          role="button"
+          tabindex="0"
+          onclick={(e) => {
+            e.preventDefault();
+            fillCredential(credential);
+          }}
+          onkeydown={(e) => {
+            handleEnter(e, () => {
+              e.preventDefault();
+              fillCredential(credential);
+            });
+          }}
+        >
+          <div class="connection-db-vendor">
+            {credential.db_vendor}
+          </div>
+          <div class="connection-title">
+            {credential.title}
+          </div>
+          <div class="connection-server">
+            <div class="connection-icon">
+              <Server size="16" />
+            </div>
+            <div class="conection-text">
+              {credential.host}:{credential.port}
+            </div>
+          </div>
+          <div class="connection-user">
+            <div class="connection-icon">
+              <User size="16" />
+            </div>
+            <div class="conection-text">
+              {credential.user}
+            </div>
+          </div>
+          <div class="connection-db-name">
+            <div class="connection-icon">
+              <Database size="16" />
+            </div>
+            <div class="conection-text">
+              {credential.database_name}
+            </div>
+          </div>
         </div>
-        <div class="connection-title">
-          {credential.title}
-        </div>
-        <div class="connection-server">
-          <div class="connection-icon">
-            <Server size="16" />
-          </div>
-          <div class="conection-text">
-            {credential.host}:{credential.port}
-          </div>
-        </div>
-        <div class="connection-user">
-          <div class="connection-icon">
-            <User size="16" />
-          </div>
-          <div class="conection-text">
-            {credential.user}
-          </div>
-        </div>
-        <div class="connection-db-name">
-          <div class="connection-icon">
-            <Database size="16" />
-          </div>
-          <div class="conection-text">
-            {credential.database_name}
-          </div>
-        </div>
-      </div>
-    {/each}
-  {/if}
+      {/each}
+    {/if}
+  </div>
 </div>
 
 <style>
+  .connection-list-container {
+    flex: 1;
+    max-width: 700px;
+  }
+
+  .connection-header {
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
   .connection-list {
     display: flex;
+    flex-wrap: wrap;
+    width: 100%;
     gap: 1rem;
     padding: 1rem 0;
   }
 
   .connection-item {
     padding: 1rem;
+    min-width: 200px;
     border-radius: 1rem;
     transition: 0.2s ease;
   }
