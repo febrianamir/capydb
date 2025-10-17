@@ -18,8 +18,8 @@ export function GetTableRecords(arg1) {
   return window['go']['usecase']['Usecase']['GetTableRecords'](arg1);
 }
 
-export function GetTables() {
-  return window['go']['usecase']['Usecase']['GetTables']();
+export function GetTables(arg1) {
+  return window['go']['usecase']['Usecase']['GetTables'](arg1);
 }
 
 export function SaveCredential(arg1) {

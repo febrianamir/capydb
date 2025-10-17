@@ -4,15 +4,25 @@
     CreateConnection,
     SaveCredential,
   } from "../../../wailsjs/go/usecase/Usecase.js";
-  import { dbCredential } from "../../states/connection.svelte.js";
+  import { connection } from "../../states/connection.svelte.js";
   import { Cable, Save } from "@lucide/svelte";
 
   async function createConnection(e) {
     e.preventDefault();
 
     try {
-      await CreateConnection(dbCredential);
-      dbCredential.has_active_connection = true;
+      let res = await CreateConnection(connection.credential);
+
+      // Append new active connections
+      connection.active_connections.push({
+        connection_id: res.ConnectionId,
+        connection_name: connection.credential.connection_name,
+      });
+
+      // Set current connection
+      connection.current_connection.connection_id = res.ConnectionId;
+      connection.current_connection.connection_name =
+        connection.credential.connection_name;
     } catch (err) {
       console.log("Failed to create connection:", err);
     }
@@ -24,13 +34,13 @@
     try {
       let timeNow = generateDBTime();
       let req = {
-        title: dbCredential.connection_name,
-        db_vendor: dbCredential.db_vendor,
-        host: dbCredential.host,
-        port: dbCredential.port,
-        user: dbCredential.user,
-        password: dbCredential.password,
-        database_name: dbCredential.database_name,
+        title: connection.credential.connection_name,
+        db_vendor: connection.credential.db_vendor,
+        host: connection.credential.host,
+        port: connection.credential.port,
+        user: connection.credential.user,
+        password: connection.credential.password,
+        database_name: connection.credential.database_name,
         created_at: timeNow,
         updated_at: timeNow,
       };
@@ -53,7 +63,7 @@
         type="text"
         name="connection_name"
         id="connection_name"
-        bind:value={dbCredential.connection_name}
+        bind:value={connection.credential.connection_name}
       />
     </div>
     <div class="connection-form-item">
@@ -62,7 +72,7 @@
         class="connection-form-input"
         name="db_vendor"
         id="db_vendor"
-        bind:value={dbCredential.db_vendor}
+        bind:value={connection.credential.db_vendor}
       >
         <option value="PostgreSQL">PostgreSQL</option>
       </select>
@@ -74,7 +84,7 @@
         type="text"
         name="host"
         id="host"
-        bind:value={dbCredential.host}
+        bind:value={connection.credential.host}
       />
     </div>
     <div class="connection-form-item">
@@ -84,7 +94,7 @@
         type="text"
         name="port"
         id="port"
-        bind:value={dbCredential.port}
+        bind:value={connection.credential.port}
       />
     </div>
     <div class="connection-form-item">
@@ -94,7 +104,7 @@
         type="text"
         name="user"
         id="user"
-        bind:value={dbCredential.user}
+        bind:value={connection.credential.user}
       />
     </div>
     <div class="connection-form-item">
@@ -104,7 +114,7 @@
         type="password"
         name="password"
         id="password"
-        bind:value={dbCredential.password}
+        bind:value={connection.credential.password}
       />
     </div>
     <div class="connection-form-item">
@@ -116,7 +126,7 @@
         type="text"
         name="database_name"
         id="database_name"
-        bind:value={dbCredential.database_name}
+        bind:value={connection.credential.database_name}
       />
     </div>
     <div class="connection-form-footer">

@@ -8,6 +8,7 @@
   import TableFilter from "./TableFilter.svelte";
   import TableRecord from "./TableRecord.svelte";
   import { getTableTabs } from "../../states/tables.svelte";
+  import { connection } from "../../states/connection.svelte";
 
   let { tableName } = $props();
   let tableTabs = getTableTabs();
@@ -51,9 +52,14 @@
     }
 
     try {
-      tableColumns = await GetTableColumns(query.table_name);
+      let getTableColumnsReq = {
+        connection_id: connection.current_connection.connection_id,
+        table_name: query.table_name,
+      };
+      tableColumns = await GetTableColumns(getTableColumnsReq);
 
       let getTableRecordsReq = {
+        connection_id: connection.current_connection.connection_id,
         table_name: query.table_name,
         limit: 500, // Default limit per page
         offset: query.offset,

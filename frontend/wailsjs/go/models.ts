@@ -87,7 +87,22 @@ export namespace request {
 	        this.search = source["search"];
 	    }
 	}
+	export class GetTableColumns {
+	    connection_id: string;
+	    table_name: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new GetTableColumns(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.connection_id = source["connection_id"];
+	        this.table_name = source["table_name"];
+	    }
+	}
 	export class GetTableRecords {
+	    connection_id: string;
 	    table_name: string;
 	    limit: number;
 	    offset: number;
@@ -101,6 +116,7 @@ export namespace request {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.connection_id = source["connection_id"];
 	        this.table_name = source["table_name"];
 	        this.limit = source["limit"];
 	        this.offset = source["offset"];
@@ -126,6 +142,18 @@ export namespace request {
 		    }
 		    return a;
 		}
+	}
+	export class GetTables {
+	    connection_id: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new GetTables(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.connection_id = source["connection_id"];
+	    }
 	}
 	export class SaveCredential {
 	    title: string;
@@ -160,6 +188,18 @@ export namespace request {
 
 export namespace response {
 	
+	export class CreateConnection {
+	    ConnectionId: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new CreateConnection(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ConnectionId = source["ConnectionId"];
+	    }
+	}
 	export class GetCredentials {
 	    Data: model.Credential[];
 	    Total: number;

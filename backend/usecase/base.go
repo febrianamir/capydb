@@ -11,8 +11,15 @@ import (
 )
 
 type Usecase struct {
-	dbConn     *gorm.DB
-	dbDataConn *gorm.DB
+	activeDbConns map[string]*gorm.DB
+	dbDataConn    *gorm.DB
+}
+
+func (u *Usecase) getActiveDbConn(connectionId string) *gorm.DB {
+	if dbConn, ok := u.activeDbConns[connectionId]; ok {
+		return dbConn
+	}
+	return nil
 }
 
 func appDataDir() (string, error) {
@@ -45,5 +52,6 @@ func NewUsecase(ctx context.Context) *Usecase {
 	}
 
 	usecase.dbDataConn = db
+	usecase.activeDbConns = map[string]*gorm.DB{} // Ensure the connections map is not nil
 	return usecase
 }

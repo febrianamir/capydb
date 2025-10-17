@@ -4,6 +4,7 @@
   import { onMount, onDestroy } from "svelte";
   import { GetTables } from "../../../wailsjs/go/usecase/Usecase";
   import { addTableTab } from "../../states/tables.svelte";
+  import { connection } from "../../states/connection.svelte";
 
   let tables = $state([]);
   let isShowTableList = $state(false);
@@ -27,7 +28,10 @@
 
   onMount(async () => {
     try {
-      tables = await GetTables();
+      let req = {
+        connection_id: connection.current_connection.connection_id,
+      };
+      tables = await GetTables(req);
       isShowTableList = true;
     } catch (err) {
       console.log("Failed to get table list:", err);

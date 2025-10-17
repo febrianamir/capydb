@@ -3,14 +3,14 @@
 import {request} from '../models';
 import {response} from '../models';
 
-export function CreateConnection(arg1:request.CreateConnection):Promise<void>;
+export function CreateConnection(arg1:request.CreateConnection):Promise<response.CreateConnection>;
 
 export function GetCredentials(arg1:request.GetCredentials):Promise<response.GetCredentials>;
 
-export function GetTableColumns(arg1:string):Promise<Array<Record<string, any>>>;
+export function GetTableColumns(arg1:request.GetTableColumns):Promise<Array<Record<string, any>>>;
 
 export function GetTableRecords(arg1:request.GetTableRecords):Promise<response.GetTableRecords>;
 
-export function GetTables():Promise<Array<string>>;
+export function GetTables(arg1:request.GetTables):Promise<Array<string>>;
 
 export function SaveCredential(arg1:request.SaveCredential):Promise<void>;

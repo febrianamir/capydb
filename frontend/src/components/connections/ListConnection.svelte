@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { GetCredentials } from "../../../wailsjs/go/usecase/Usecase";
   import { Server, User, Database } from "@lucide/svelte";
-  import { dbCredential } from "../../states/connection.svelte";
+  import { connection } from "../../states/connection.svelte";
   import { handleEnter } from "../../utils/key";
 
   let credentials = $state([]);
@@ -18,14 +18,13 @@
   });
 
   function fillCredential(credential) {
-    dbCredential.has_active_connection = false;
-    dbCredential.connection_name = credential.title;
-    dbCredential.db_vendor = credential.db_vendor;
-    dbCredential.host = credential.host;
-    dbCredential.port = credential.port;
-    dbCredential.user = credential.user;
-    dbCredential.password = credential.password;
-    dbCredential.database_name = credential.database_name;
+    connection.credential.connection_name = credential.title;
+    connection.credential.db_vendor = credential.db_vendor;
+    connection.credential.host = credential.host;
+    connection.credential.port = credential.port;
+    connection.credential.user = credential.user;
+    connection.credential.password = credential.password;
+    connection.credential.database_name = credential.database_name;
   }
 </script>
 

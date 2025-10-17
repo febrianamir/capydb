@@ -1,26 +1,45 @@
 <script>
   import { EllipsisVertical } from "@lucide/svelte";
   import { setOpenedTab } from "../states/tab.svelte";
-  import { dbCredential } from "../states/connection.svelte";
+  import { connection } from "../states/connection.svelte";
+  import { handleEnter } from "../utils/key";
 </script>
 
 <div class="tab">
   <div
     class="tab-connection"
-    onclick={() => {
+    role="button"
+    tabindex="0"
+    onclick={(e) => {
+      e.preventDefault();
       setOpenedTab("CONNECTION");
+    }}
+    onkeydown={(e) => {
+      handleEnter(e, () => {
+        e.preventDefault();
+        setOpenedTab("TABLE");
+      });
     }}
   >
     <EllipsisVertical />
   </div>
   <div
     class="tab-explore"
-    onclick={() => {
+    role="button"
+    tabindex="0"
+    onclick={(e) => {
+      e.preventDefault();
       setOpenedTab("TABLE");
     }}
+    onkeydown={(e) => {
+      handleEnter(e, () => {
+        e.preventDefault();
+        setOpenedTab("TABLE");
+      });
+    }}
   >
-    {#if dbCredential.has_active_connection}
-      {dbCredential.connection_name}
+    {#if connection.current_connection.connection_id !== ""}
+      {connection.current_connection.connection_name}
     {:else}
       No Active Connection
     {/if}

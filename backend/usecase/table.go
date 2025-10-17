@@ -8,15 +8,16 @@ import (
 	"fmt"
 )
 
-func (u *Usecase) GetTables() ([]string, error) {
-	if u.dbConn == nil {
+func (u *Usecase) GetTables(req request.GetTables) ([]string, error) {
+	dbConn := u.getActiveDbConn(req.ConnectionId)
+	if dbConn == nil {
 		return []string{}, errors.New("no db connection")
 	}
 
 	query := "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name ASC"
 
 	var tableNames = make([]string, 0)
-	err := u.dbConn.Raw(query).Scan(&tableNames).Error
+	err := dbConn.Raw(query).Scan(&tableNames).Error
 	if err != nil {
 		return []string{}, err
 	}
@@ -24,15 +25,16 @@ func (u *Usecase) GetTables() ([]string, error) {
 	return tableNames, nil
 }
 
-func (u *Usecase) GetTableColumns(tableName string) ([]map[string]any, error) {
-	if u.dbConn == nil {
+func (u *Usecase) GetTableColumns(req request.GetTableColumns) ([]map[string]any, error) {
+	dbConn := u.getActiveDbConn(req.ConnectionId)
+	if dbConn == nil {
 		return []map[string]any{}, errors.New("no db connection")
 	}
 
-	query := fmt.Sprintf("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '%v' ORDER BY ordinal_position", tableName)
+	query := fmt.Sprintf("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '%v' ORDER BY ordinal_position", req.TableName)
 
 	var columns = make([]map[string]any, 0)
-	err := u.dbConn.Raw(query).Scan(&columns).Error
+	err := dbConn.Raw(query).Scan(&columns).Error
 	if err != nil {
 		return []map[string]any{}, err
 	}
@@ -41,7 +43,8 @@ func (u *Usecase) GetTableColumns(tableName string) ([]map[string]any, error) {
 }
 
 func (u *Usecase) GetTableRecords(req request.GetTableRecords) (response.GetTableRecords, error) {
-	if u.dbConn == nil {
+	dbConn := u.getActiveDbConn(req.ConnectionId)
+	if dbConn == nil {
 		return response.GetTableRecords{}, errors.New("no db connection")
 	}
 
@@ -73,13 +76,13 @@ func (u *Usecase) GetTableRecords(req request.GetTableRecords) (response.GetTabl
 	}
 
 	var records = make([]map[string]any, 0)
-	err := u.dbConn.Raw(query).Scan(&records).Error
+	err := dbConn.Raw(query).Scan(&records).Error
 	if err != nil {
 		return res, err
 	}
 
 	var count int64
-	err = u.dbConn.Raw(queryCount).Count(&count).Error
+	err = dbConn.Raw(queryCount).Count(&count).Error
 	if err != nil {
 		return res, err
 	}
