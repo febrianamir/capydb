@@ -1,6 +1,6 @@
 <script>
   import { DeleteCredential } from "../../../wailsjs/go/usecase/Usecase";
-  import { Server, User, Database, Trash } from "@lucide/svelte";
+  import { Server, User, Database, Trash, Plus } from "@lucide/svelte";
   import { connection } from "../../states/connection.svelte";
   import { handleEnter } from "../../utils/key";
 
@@ -29,10 +29,34 @@
       console.log("Failed to delete credential:", err);
     }
   }
+
+  function addCredential() {
+    connection.credential.credential_idx = 0;
+    connection.credential.credential_id = 0;
+  }
 </script>
 
 <div class="connection-list-container">
-  <h2 class="connection-header">ALL CONNECTIONS</h2>
+  <h2 class="connection-header">
+    <div class="connection-header-text">ALL CONNECTIONS</div>
+    <div
+      class="connection-header-btn-add"
+      role="button"
+      tabindex="0"
+      onclick={(e) => {
+        e.preventDefault();
+        addCredential();
+      }}
+      onkeydown={(e) => {
+        handleEnter(e, () => {
+          e.preventDefault();
+          addCredential();
+        });
+      }}
+    >
+      <Plus size="18" strokeWidth="3" />
+    </div>
+  </h2>
   <div class="connection-list">
     {#if credentials.length > 0}
       {#each credentials as credential, i (credential.id)}
@@ -113,8 +137,29 @@
   }
 
   .connection-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .connection-header-text {
     font-size: 1.15rem;
     font-weight: 600;
+  }
+
+  .connection-header-btn-add {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: var(--color-dark-grey-2);
+    border-radius: 1rem;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  .connection-header-btn-add:hover {
+    background-color: var(--color-dark-grey-3);
   }
 
   .connection-list {

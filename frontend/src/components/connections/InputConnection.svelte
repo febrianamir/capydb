@@ -81,7 +81,13 @@
 </script>
 
 <div class="connection-input-container">
-  <h3 class="connection-input-header">CONNECT TO DB</h3>
+  <h3 class="connection-input-header">
+    {#if connection.credential.credential_id > 0}
+      CONNECT TO DB
+    {:else}
+      ADD NEW CONNECTION
+    {/if}
+  </h3>
   <form onsubmit={createConnection} class="connection-form">
     <div class="connection-form-item">
       <label for="connection_name" class="connection-form-label">
