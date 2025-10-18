@@ -1,6 +1,7 @@
 package request
 
 type SaveCredential struct {
+	ID           int    `json:"id"`
 	Title        string `json:"title"`
 	DBVendor     string `json:"db_vendor"`
 	Host         string `json:"host"`

@@ -1,26 +1,14 @@
 <script>
-  import { onMount } from "svelte";
-  import {
-    DeleteCredential,
-    GetCredentials,
-  } from "../../../wailsjs/go/usecase/Usecase";
+  import { DeleteCredential } from "../../../wailsjs/go/usecase/Usecase";
   import { Server, User, Database, Trash } from "@lucide/svelte";
   import { connection } from "../../states/connection.svelte";
   import { handleEnter } from "../../utils/key";
 
-  let credentials = $state([]);
+  let { credentials } = $props();
 
-  onMount(async () => {
-    try {
-      let req = {};
-      let credentialsRes = await GetCredentials(req);
-      credentials = credentialsRes.Data;
-    } catch (err) {
-      console.log("Failed to get list credentials:", err);
-    }
-  });
-
-  function fillCredential(credential) {
+  function fillCredential(credential, credentialIdx) {
+    connection.credential.credential_idx = credentialIdx;
+    connection.credential.credential_id = credential.id;
     connection.credential.connection_name = credential.title;
     connection.credential.db_vendor = credential.db_vendor;
     connection.credential.host = credential.host;
@@ -54,12 +42,12 @@
           tabindex="0"
           onclick={(e) => {
             e.preventDefault();
-            fillCredential(credential);
+            fillCredential(credential, i);
           }}
           onkeydown={(e) => {
             handleEnter(e, () => {
               e.preventDefault();
-              fillCredential(credential);
+              fillCredential(credential, i);
             });
           }}
         >
@@ -69,11 +57,13 @@
             tabindex="0"
             onclick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               deleteCredential(credential, i);
             }}
             onkeydown={(e) => {
               handleEnter(e, () => {
                 e.preventDefault();
+                e.stopPropagation();
                 deleteCredential(credential, i);
               });
             }}

@@ -7,6 +7,8 @@
   import { connection } from "../../states/connection.svelte.js";
   import { Cable, Save } from "@lucide/svelte";
 
+  let { credentials } = $props();
+
   async function createConnection(e) {
     e.preventDefault();
 
@@ -44,7 +46,34 @@
         created_at: timeNow,
         updated_at: timeNow,
       };
+      if (connection.credential.credential_id > 0) {
+        // Add credential id to update
+        req.id = connection.credential.credential_id;
+      }
+
       await SaveCredential(req);
+
+      if (connection.credential.credential_id > 0) {
+        // Update credential list
+        credentials[connection.credential.credential_idx] =
+          connection.credential;
+        credentials[connection.credential.credential_idx].id =
+          connection.credential.credential_id;
+        credentials[connection.credential.credential_idx].title =
+          connection.credential.connection_name;
+        credentials[connection.credential.credential_idx].db_vendor =
+          connection.credential.db_vendor;
+        credentials[connection.credential.credential_idx].host =
+          connection.credential.host;
+        credentials[connection.credential.credential_idx].port =
+          connection.credential.port;
+        credentials[connection.credential.credential_idx].user =
+          connection.credential.user;
+        credentials[connection.credential.credential_idx].password =
+          connection.credential.password;
+        credentials[connection.credential.credential_idx].database_name =
+          connection.credential.database_name;
+      }
     } catch (err) {
       console.log("Failed to save connection:", err);
     }

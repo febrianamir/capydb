@@ -12,7 +12,7 @@ func (u *Usecase) SaveCredential(req request.SaveCredential) error {
 		return errors.New("no db connection")
 	}
 
-	err := u.dbDataConn.Create(&model.Credential{
+	credential := model.Credential{
 		Title:        req.Title,
 		DBVendor:     req.DBVendor,
 		Host:         req.Host,
@@ -22,7 +22,12 @@ func (u *Usecase) SaveCredential(req request.SaveCredential) error {
 		DatabaseName: req.DatabaseName,
 		CreatedAt:    req.CreatedAt,
 		UpdatedAt:    req.UpdatedAt,
-	}).Error
+	}
+	if req.ID > 0 {
+		credential.ID = req.ID
+	}
+
+	err := u.dbDataConn.Save(&credential).Error
 	if err != nil {
 		return err
 	}
@@ -131,21 +136,3 @@ func (u *Usecase) DeleteCredential(req request.DeleteCredential) error {
 //
 // 	return blog, nil
 // }
-//
-// func (repo *Repository) UpdateBlog(ctx context.Context, blog model.Blog) (model.Blog, error) {
-// 	ctx, span := sentry.StartSpan(ctx, "repository.UpdateBlog")
-// 	defer span.Finish()
-//
-// 	err := repo.db.Save(&blog).Error
-// 	if err != nil {
-// 		elk.LogError(ctx, "Error UpdateBlog", []zap.Field{
-// 			zap.Error(err),
-// 			zap.Strings("tags", []string{"postgres", "blog", "repo"}),
-// 		}...)
-//
-// 		return blog, err
-// 	}
-//
-// 	return blog, nil
-// }
-//

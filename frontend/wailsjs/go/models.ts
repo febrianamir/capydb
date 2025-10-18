@@ -168,6 +168,7 @@ export namespace request {
 	    }
 	}
 	export class SaveCredential {
+	    id: number;
 	    title: string;
 	    db_vendor: string;
 	    host: string;
@@ -184,6 +185,7 @@ export namespace request {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
 	        this.title = source["title"];
 	        this.db_vendor = source["db_vendor"];
 	        this.host = source["host"];
