@@ -15,3 +15,7 @@ type SaveCredential struct {
 type GetCredentials struct {
 	Search string `json:"search"`
 }
+
+type DeleteCredential struct {
+	CredentialId uint `json:"credential_id"`
+}

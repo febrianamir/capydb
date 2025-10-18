@@ -6,6 +6,10 @@ export function CreateConnection(arg1) {
   return window['go']['usecase']['Usecase']['CreateConnection'](arg1);
 }
 
+export function DeleteCredential(arg1) {
+  return window['go']['usecase']['Usecase']['DeleteCredential'](arg1);
+}
+
 export function GetCredentials(arg1) {
   return window['go']['usecase']['Usecase']['GetCredentials'](arg1);
 }

@@ -53,6 +53,19 @@ func (u *Usecase) GetCredentials(req request.GetCredentials) (response.GetCreden
 	return res, nil
 }
 
+func (u *Usecase) DeleteCredential(req request.DeleteCredential) error {
+	if u.dbDataConn == nil {
+		return errors.New("no db connection")
+	}
+
+	err := u.dbDataConn.Delete(&model.Credential{}, req.CredentialId).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 //
 // func (repo *Repository) GetBlogTotal(ctx context.Context, query request.GetBlogQuery) (uint, error) {
 // 	ctx, span := sentry.StartSpan(ctx, "repository.GetBlogTotal")
@@ -136,23 +149,3 @@ func (u *Usecase) GetCredentials(req request.GetCredentials) (response.GetCreden
 // 	return blog, nil
 // }
 //
-// func (repo *Repository) DeleteBlog(ctx context.Context, blog model.Blog) error {
-// 	ctx, span := sentry.StartSpan(ctx, "repository.DeleteBlog")
-// 	defer span.Finish()
-//
-// 	tx, ok := ctx.Value("Trx").(*lib.Database)
-// 	if !ok {
-// 		tx = repo.db
-// 	}
-//
-// 	err := tx.Delete(&blog).Error
-// 	if err != nil {
-// 		elk.LogError(ctx, "Error DeleteBlog", []zap.Field{
-// 			zap.Error(err),
-// 			zap.Strings("tags", []string{"postgres", "blog", "repo"}),
-// 		}...)
-// 		return err
-// 	}
-//
-// 	return nil
-// }

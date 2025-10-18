@@ -13,9 +13,4 @@
     display: flex;
     padding: 1rem;
   }
-
-  .connection-header {
-    font-size: 1.15rem;
-    font-weight: 600;
-  }
 </style>

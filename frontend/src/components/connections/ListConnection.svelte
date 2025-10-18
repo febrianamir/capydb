@@ -1,7 +1,10 @@
 <script>
   import { onMount } from "svelte";
-  import { GetCredentials } from "../../../wailsjs/go/usecase/Usecase";
-  import { Server, User, Database } from "@lucide/svelte";
+  import {
+    DeleteCredential,
+    GetCredentials,
+  } from "../../../wailsjs/go/usecase/Usecase";
+  import { Server, User, Database, Trash } from "@lucide/svelte";
   import { connection } from "../../states/connection.svelte";
   import { handleEnter } from "../../utils/key";
 
@@ -26,13 +29,25 @@
     connection.credential.password = credential.password;
     connection.credential.database_name = credential.database_name;
   }
+
+  async function deleteCredential(credential, credentialIdx) {
+    try {
+      let req = {
+        credential_id: credential.id,
+      };
+      await DeleteCredential(req);
+      credentials.splice(credentialIdx, 1);
+    } catch (err) {
+      console.log("Failed to delete credential:", err);
+    }
+  }
 </script>
 
 <div class="connection-list-container">
   <h2 class="connection-header">ALL CONNECTIONS</h2>
   <div class="connection-list">
     {#if credentials.length > 0}
-      {#each credentials as credential}
+      {#each credentials as credential, i (credential.id)}
         <div
           class="connection-item"
           role="button"
@@ -48,6 +63,23 @@
             });
           }}
         >
+          <div
+            class="connection-btn-delete"
+            role="button"
+            tabindex="0"
+            onclick={(e) => {
+              e.preventDefault();
+              deleteCredential(credential, i);
+            }}
+            onkeydown={(e) => {
+              handleEnter(e, () => {
+                e.preventDefault();
+                deleteCredential(credential, i);
+              });
+            }}
+          >
+            <Trash size="14" />
+          </div>
           <div class="connection-db-vendor">
             {credential.db_vendor}
           </div>
@@ -87,7 +119,7 @@
 <style>
   .connection-list-container {
     flex: 1;
-    max-width: 700px;
+    width: 700px;
   }
 
   .connection-header {
@@ -104,10 +136,32 @@
   }
 
   .connection-item {
+    position: relative;
     padding: 1rem;
     min-width: 200px;
     border-radius: 1rem;
     transition: 0.2s ease;
+  }
+
+  .connection-btn-delete {
+    opacity: 0;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: 0.2s ease;
+  }
+
+  .connection-item:hover .connection-btn-delete {
+    opacity: 1;
+  }
+
+  .connection-btn-delete:hover {
+    background-color: var(--color-bg);
   }
 
   .connection-item:hover {

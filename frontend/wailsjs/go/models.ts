@@ -75,6 +75,18 @@ export namespace request {
 	        this.password = source["password"];
 	    }
 	}
+	export class DeleteCredential {
+	    credential_id: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new DeleteCredential(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.credential_id = source["credential_id"];
+	    }
+	}
 	export class GetCredentials {
 	    search: string;
 	

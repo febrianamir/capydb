@@ -5,6 +5,8 @@ import {response} from '../models';
 
 export function CreateConnection(arg1:request.CreateConnection):Promise<response.CreateConnection>;
 
+export function DeleteCredential(arg1:request.DeleteCredential):Promise<void>;
+
 export function GetCredentials(arg1:request.GetCredentials):Promise<response.GetCredentials>;
 
 export function GetTableColumns(arg1:request.GetTableColumns):Promise<Array<Record<string, any>>>;
