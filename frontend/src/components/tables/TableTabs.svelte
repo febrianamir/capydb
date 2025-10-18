@@ -1,32 +1,26 @@
 <script>
-  import { handleEnter } from "../../utils/key";
-  import {
-    closeTableTab,
-    switchActiveTab,
-    getTableTabs,
-  } from "../../states/tables.svelte";
-  import { X } from "@lucide/svelte";
+  import { handleEnter } from '../../utils/key'
+  import { closeTableTab, switchActiveTab, getTableTabs } from '../../states/tables.svelte'
+  import { X } from '@lucide/svelte'
 
-  let tableTabs = getTableTabs();
+  let tableTabs = getTableTabs()
 </script>
 
 <div class="table-tabs">
   {#each tableTabs.tabs as tableTab}
     <div
-      class="table-tab-item {tableTabs.openedTab === tableTab.tableName
-        ? 'active'
-        : ''}"
+      class="table-tab-item {tableTabs.openedTab === tableTab.tableName ? 'active' : ''}"
       role="button"
       tabindex="0"
       onclick={(e) => {
-        e.preventDefault();
-        switchActiveTab(tableTab.tableName);
+        e.preventDefault()
+        switchActiveTab(tableTab.tableName)
       }}
       onkeydown={(e) => {
         handleEnter(e, () => {
-          e.preventDefault();
-          switchActiveTab(tableTab.tableName);
-        });
+          e.preventDefault()
+          switchActiveTab(tableTab.tableName)
+        })
       }}
     >
       <div class="table-tab-item-text">{tableTab.tableName}</div>
@@ -35,16 +29,16 @@
         role="button"
         tabindex="0"
         onclick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          closeTableTab(tableTab.tableName);
+          e.preventDefault()
+          e.stopPropagation()
+          closeTableTab(tableTab.tableName)
         }}
         onkeydown={(e) => {
           handleEnter(e, () => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeTableTab(tableTab.tableName);
-          });
+            e.preventDefault()
+            e.stopPropagation()
+            closeTableTab(tableTab.tableName)
+          })
         }}
       >
         <X size="14" />

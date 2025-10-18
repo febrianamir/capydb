@@ -1,6 +1,6 @@
 <script>
-  import { ArrowDownNarrowWide, ArrowUpWideNarrow } from "@lucide/svelte";
-  import { onMount, onDestroy } from "svelte";
+  import { ArrowDownNarrowWide, ArrowUpWideNarrow } from '@lucide/svelte'
+  import { onMount, onDestroy } from 'svelte'
 
   let {
     queryTableContents,
@@ -8,76 +8,76 @@
     tableColumns,
     tableRecords,
     columnsVisibility,
-  } = $props();
+  } = $props()
 
-  let cols = [];
-  let isColResizeActive = $state(false);
-  let colResizeActiveIndex = $state(0);
-  let startX = 0;
-  let startWidth = 0;
+  let cols = []
+  let isColResizeActive = $state(false)
+  let colResizeActiveIndex = $state(0)
+  let startX = 0
+  let startWidth = 0
 
   function getColumnTypeColorClass(type, data) {
     if (data === null) {
-      return "table-record-cell-null";
+      return 'table-record-cell-null'
     }
 
     switch (type) {
-      case "integer":
-      case "numeric":
-      case "double precision":
-        return "table-record-cell-blue";
-      case "character varying":
-      case "text":
-        return "table-record-cell-green";
-      case "timestamp with time zone":
-      case "timestamp without time zone":
-        return "table-record-cell-orange";
-      case "boolean":
-        return "table-record-cell-yellow";
+      case 'integer':
+      case 'numeric':
+      case 'double precision':
+        return 'table-record-cell-blue'
+      case 'character varying':
+      case 'text':
+        return 'table-record-cell-green'
+      case 'timestamp with time zone':
+      case 'timestamp without time zone':
+        return 'table-record-cell-orange'
+      case 'boolean':
+        return 'table-record-cell-yellow'
     }
   }
 
   function getColumnInitialWidth(columnName, type) {
-    let baseWidth = 0;
+    let baseWidth = 0
     switch (type) {
-      case "integer":
-      case "numeric":
-      case "double precision":
-        baseWidth = 30;
-        break;
-      case "character varying":
-      case "text":
-        baseWidth = 270;
-        break;
-      case "timestamp with time zone":
-      case "timestamp without time zone":
-        baseWidth = 270;
-        break;
-      case "boolean":
-        baseWidth = 40;
-        break;
+      case 'integer':
+      case 'numeric':
+      case 'double precision':
+        baseWidth = 30
+        break
+      case 'character varying':
+      case 'text':
+        baseWidth = 270
+        break
+      case 'timestamp with time zone':
+      case 'timestamp without time zone':
+        baseWidth = 270
+        break
+      case 'boolean':
+        baseWidth = 40
+        break
     }
-    return measureHeaderWidth(columnName, baseWidth);
+    return measureHeaderWidth(columnName, baseWidth)
   }
 
   function measureHeaderWidth(name, baseWidth) {
-    const estimated = name.length * 10 + 20; // Roughly 10px per char, add 20px because header cell has additional padding-right to show sorting icon
-    return Math.max(baseWidth, Math.min(estimated, 400));
+    const estimated = name.length * 10 + 20 // Roughly 10px per char, add 20px because header cell has additional padding-right to show sorting icon
+    return Math.max(baseWidth, Math.min(estimated, 400))
   }
 
   function toggleColumnSort(tableColumn) {
     // If sort_by changed, set order_by back to ASC
     // If sort_by unchanged, toggle order_by
-    let sortBy = tableColumn.column_name;
-    let orderBy = "";
+    let sortBy = tableColumn.column_name
+    let orderBy = ''
     if (tableColumn.column_name != queryTableContents.sort_by) {
-      orderBy = "ASC";
+      orderBy = 'ASC'
     } else {
-      if (queryTableContents.order_by == "ASC") {
-        orderBy = "DESC";
+      if (queryTableContents.order_by == 'ASC') {
+        orderBy = 'DESC'
       } else {
-        sortBy = "";
-        orderBy = "";
+        sortBy = ''
+        orderBy = ''
       }
     }
     updateQueryTableContents({
@@ -85,52 +85,52 @@
       sort_by: sortBy,
       order_by: orderBy,
       offset: queryTableContents.offset,
-    });
+    })
   }
 
   function isColumnVisible(columnName) {
     return (
       columnsVisibility.length == 0 ||
       (columnsVisibility.length > 0 && columnsVisibility.includes(columnName))
-    );
+    )
   }
 
   function startResize(e, colIdx) {
-    e.preventDefault();
-    isColResizeActive = true;
-    colResizeActiveIndex = colIdx;
-    startX = e.clientX;
-    startWidth = parseInt(getComputedStyle(cols[colIdx]).width, 10);
+    e.preventDefault()
+    isColResizeActive = true
+    colResizeActiveIndex = colIdx
+    startX = e.clientX
+    startWidth = parseInt(getComputedStyle(cols[colIdx]).width, 10)
   }
 
   function stopResize(e) {
-    e.preventDefault();
-    if (!isColResizeActive) return;
+    e.preventDefault()
+    if (!isColResizeActive) return
     // Set small timeout/sleep to prevent header click event triggered
     // See .table-record-cell onclick event
     setTimeout(() => {
-      isColResizeActive = false;
-      colResizeActiveIndex = 0;
-    }, 10);
+      isColResizeActive = false
+      colResizeActiveIndex = 0
+    }, 10)
   }
 
   function onMouseMove(e) {
-    e.preventDefault();
-    if (!isColResizeActive) return;
-    const diff = e.clientX - startX;
-    const newWidth = Math.max(60, startWidth + diff);
-    cols[colResizeActiveIndex].style.width = `${newWidth}px`;
+    e.preventDefault()
+    if (!isColResizeActive) return
+    const diff = e.clientX - startX
+    const newWidth = Math.max(60, startWidth + diff)
+    cols[colResizeActiveIndex].style.width = `${newWidth}px`
   }
 
   onMount(() => {
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", stopResize);
-  });
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', stopResize)
+  })
 
   onDestroy(() => {
-    window.removeEventListener("mousemove", onMouseMove);
-    window.removeEventListener("mouseup", stopResize);
-  });
+    window.removeEventListener('mousemove', onMouseMove)
+    window.removeEventListener('mouseup', stopResize)
+  })
 </script>
 
 <div class="table-record-container">
@@ -142,7 +142,7 @@
             bind:this={cols[i]}
             style="width: {getColumnInitialWidth(
               tableColumn.column_name,
-              tableColumn.data_type,
+              tableColumn.data_type
             )}px;"
           />
         {/if}
@@ -155,19 +155,18 @@
             <th
               class="table-record-cell"
               onclick={(e) => {
-                e.preventDefault();
-                if (isColResizeActive) return;
-                toggleColumnSort(tableColumn);
+                e.preventDefault()
+                if (isColResizeActive) return
+                toggleColumnSort(tableColumn)
               }}
             >
               {tableColumn.column_name}
               <div
-                class="table-record-cell-sort {tableColumn.column_name ==
-                queryTableContents.sort_by
+                class="table-record-cell-sort {tableColumn.column_name == queryTableContents.sort_by
                   ? 'active'
                   : ''}"
               >
-                {#if queryTableContents.order_by == "ASC"}
+                {#if queryTableContents.order_by == 'ASC'}
                   <div class="table-record-cell-icon">
                     <ArrowDownNarrowWide size="16" />
                   </div>
@@ -197,11 +196,11 @@
                 <td
                   class="table-record-cell {getColumnTypeColorClass(
                     tableColumn.data_type,
-                    tableRecord[tableColumn.column_name],
+                    tableRecord[tableColumn.column_name]
                   )}"
                 >
                   {tableRecord[tableColumn.column_name] === null
-                    ? "NULL"
+                    ? 'NULL'
                     : tableRecord[tableColumn.column_name]}
                 </td>
               {/if}

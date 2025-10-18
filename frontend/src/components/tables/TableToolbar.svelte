@@ -1,12 +1,6 @@
 <script>
-  import { handleEnter } from "../../utils/key";
-  import {
-    RefreshCcw,
-    ChevronLeft,
-    ChevronRight,
-    Search,
-    SlidersHorizontal,
-  } from "@lucide/svelte";
+  import { handleEnter } from '../../utils/key'
+  import { RefreshCcw, ChevronLeft, ChevronRight, Search, SlidersHorizontal } from '@lucide/svelte'
 
   let {
     currentPage,
@@ -18,15 +12,15 @@
     tableRecordsCount,
     tableRecordsTotal,
     setColumnsVisibility,
-  } = $props();
+  } = $props()
 
-  let isShowColumnVisibilityInput = $state(false);
-  let columnsVisibilityInputRel;
+  let isShowColumnVisibilityInput = $state(false)
+  let columnsVisibilityInputRel
 
   function paginationPrevPage() {
-    let newOffset = queryTableContents.offset - 500;
+    let newOffset = queryTableContents.offset - 500
     if (newOffset < 0) {
-      newOffset = 0;
+      newOffset = 0
     }
 
     updateQueryTableContents({
@@ -34,14 +28,14 @@
       sort_by: queryTableContents.sort_by,
       order_by: queryTableContents.order_by,
       offset: newOffset,
-    });
+    })
   }
 
   function paginationNextPage() {
-    let prevOffset = queryTableContents.offset;
-    let newOffset = queryTableContents.offset + 500;
+    let prevOffset = queryTableContents.offset
+    let newOffset = queryTableContents.offset + 500
     if (newOffset >= tableRecordsTotal) {
-      newOffset = prevOffset;
+      newOffset = prevOffset
     }
 
     updateQueryTableContents({
@@ -49,7 +43,7 @@
       sort_by: queryTableContents.sort_by,
       order_by: queryTableContents.order_by,
       offset: newOffset,
-    });
+    })
   }
 
   function refreshTableRecords() {
@@ -59,15 +53,15 @@
       order_by: queryTableContents.order_by,
       offset: queryTableContents.offset,
       conditions: queryTableContents.conditions,
-    });
+    })
   }
 
   function toggleColumnVisibility() {
     if (isShowColumnVisibilityInput) {
-      let columns = columnsVisibilityInputRel.value;
-      setColumnsVisibility(columns);
+      let columns = columnsVisibilityInputRel.value
+      setColumnsVisibility(columns)
     }
-    isShowColumnVisibilityInput = !isShowColumnVisibilityInput;
+    isShowColumnVisibilityInput = !isShowColumnVisibilityInput
   }
 </script>
 
@@ -77,14 +71,14 @@
     tabindex="0"
     class="table-refresh"
     onclick={(e) => {
-      e.preventDefault();
-      refreshTableRecords();
+      e.preventDefault()
+      refreshTableRecords()
     }}
     onkeydown={(e) => {
       handleEnter(e, () => {
-        e.preventDefault();
-        refreshTableRecords();
-      });
+        e.preventDefault()
+        refreshTableRecords()
+      })
     }}
   >
     <div class="table-refresh-icon">
@@ -97,14 +91,14 @@
       role="button"
       tabindex="0"
       onclick={(e) => {
-        e.preventDefault();
-        paginationPrevPage();
+        e.preventDefault()
+        paginationPrevPage()
       }}
       onkeydown={(e) => {
         handleEnter(e, () => {
-          e.preventDefault();
-          paginationPrevPage();
-        });
+          e.preventDefault()
+          paginationPrevPage()
+        })
       }}
     >
       <div class="table-pagination-icon">
@@ -119,14 +113,14 @@
       role="button"
       tabindex="0"
       onclick={(e) => {
-        e.preventDefault();
-        paginationNextPage();
+        e.preventDefault()
+        paginationNextPage()
       }}
       onkeydown={(e) => {
         handleEnter(e, () => {
-          e.preventDefault();
-          paginationNextPage();
-        });
+          e.preventDefault()
+          paginationNextPage()
+        })
       }}
     >
       <div class="table-pagination-icon">
@@ -139,14 +133,14 @@
     tabindex="0"
     class="table-toggle-filter"
     onclick={(e) => {
-      e.preventDefault();
-      toggleTableFilter(tableColumns[0].column_name);
+      e.preventDefault()
+      toggleTableFilter(tableColumns[0].column_name)
     }}
     onkeydown={(e) => {
       handleEnter(e, () => {
-        e.preventDefault();
-        toggleTableFilter(tableColumns[0].column_name);
-      });
+        e.preventDefault()
+        toggleTableFilter(tableColumns[0].column_name)
+      })
     }}
   >
     <div class="table-toggle-filter-icon">
@@ -158,14 +152,14 @@
     tabindex="0"
     class="table-toggle-column"
     onclick={(e) => {
-      e.preventDefault();
-      toggleColumnVisibility();
+      e.preventDefault()
+      toggleColumnVisibility()
     }}
     onkeydown={(e) => {
       handleEnter(e, () => {
-        e.preventDefault();
-        toggleColumnVisibility();
-      });
+        e.preventDefault()
+        toggleColumnVisibility()
+      })
     }}
   >
     <div class="table-toggle-column-icon">
@@ -175,31 +169,27 @@
     <div
       role="button"
       tabindex="0"
-      class="table-column-visibility {isShowColumnVisibilityInput
-        ? 'active'
-        : ''}"
+      class="table-column-visibility {isShowColumnVisibilityInput ? 'active' : ''}"
       onclick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault()
+        e.stopPropagation()
       }}
       onkeydown={(e) => {
         handleEnter(e, () => {
-          e.preventDefault();
-          e.stopPropagation();
-        });
+          e.preventDefault()
+          e.stopPropagation()
+        })
       }}
     >
-      <div class="table-column-visibility-info">
-        Select columns to show, separate by comma
-      </div>
+      <div class="table-column-visibility-info">Select columns to show, separate by comma</div>
       <textarea
         class="table-column-visibility-input"
         bind:this={columnsVisibilityInputRel}
         onkeydown={(e) => {
           handleEnter(e, () => {
-            e.preventDefault();
-            toggleColumnVisibility();
-          });
+            e.preventDefault()
+            toggleColumnVisibility()
+          })
         }}
       ></textarea>
     </div>
@@ -295,7 +285,7 @@
     margin-top: 0.5rem;
     padding: 0.2rem;
     font-size: 12px;
-    font-family: "JetBrains Mono", monospace;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   /* Table Pagination */

@@ -1,28 +1,28 @@
 <script>
-  import { handleEnter } from "../../utils/key";
-  import { Table } from "@lucide/svelte";
-  import { onMount, onDestroy } from "svelte";
-  import { GetTables } from "../../../wailsjs/go/usecase/Usecase";
-  import { addTableTab } from "../../states/tables.svelte";
-  import { connection } from "../../states/connection.svelte";
+  import { handleEnter } from '../../utils/key'
+  import { Table } from '@lucide/svelte'
+  import { onMount, onDestroy } from 'svelte'
+  import { GetTables } from '../../../wailsjs/go/usecase/Usecase'
+  import { addTableTab } from '../../states/tables.svelte'
+  import { connection } from '../../states/connection.svelte'
 
-  let tables = $state([]);
-  let isShowTableList = $state(false);
-  let isTableSidebarResizing = $state(false);
-  let tableSidebarWidth = $state(250); // Default width
+  let tables = $state([])
+  let isShowTableList = $state(false)
+  let isTableSidebarResizing = $state(false)
+  let tableSidebarWidth = $state(250) // Default width
 
   function startResize(e) {
-    e.preventDefault();
-    isTableSidebarResizing = true;
+    e.preventDefault()
+    isTableSidebarResizing = true
   }
 
   function stopResize() {
-    isTableSidebarResizing = false;
+    isTableSidebarResizing = false
   }
 
   function onMouseMove(e) {
     if (isTableSidebarResizing) {
-      tableSidebarWidth = Math.max(200, e.clientX); // Minimum width = 200px
+      tableSidebarWidth = Math.max(200, e.clientX) // Minimum width = 200px
     }
   }
 
@@ -30,23 +30,23 @@
     try {
       let req = {
         connection_id: connection.current_connection.connection_id,
-      };
-      tables = await GetTables(req);
-      isShowTableList = true;
+      }
+      tables = await GetTables(req)
+      isShowTableList = true
     } catch (err) {
-      console.log("Failed to get table list:", err);
+      console.log('Failed to get table list:', err)
     }
-  });
+  })
 
   onMount(() => {
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", stopResize);
-  });
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', stopResize)
+  })
 
   onDestroy(() => {
-    window.removeEventListener("mousemove", onMouseMove);
-    window.removeEventListener("mouseup", stopResize);
-  });
+    window.removeEventListener('mousemove', onMouseMove)
+    window.removeEventListener('mouseup', stopResize)
+  })
 </script>
 
 <div class="table-sidebar">
@@ -60,14 +60,14 @@
               tabindex="0"
               class="table-item"
               onclick={(e) => {
-                e.preventDefault();
-                addTableTab(table);
+                e.preventDefault()
+                addTableTab(table)
               }}
               onkeydown={(e) => {
                 handleEnter(e, () => {
-                  e.preventDefault();
-                  addTableTab(table);
-                });
+                  e.preventDefault()
+                  addTableTab(table)
+                })
               }}
             >
               <div class="table-item-icon">

@@ -1,40 +1,36 @@
 <script>
-  import { generateDBTime } from "../../utils/db.js";
-  import {
-    CreateConnection,
-    SaveCredential,
-  } from "../../../wailsjs/go/usecase/Usecase.js";
-  import { connection } from "../../states/connection.svelte.js";
-  import { Cable, Save } from "@lucide/svelte";
+  import { generateDBTime } from '../../utils/db.js'
+  import { CreateConnection, SaveCredential } from '../../../wailsjs/go/usecase/Usecase.js'
+  import { connection } from '../../states/connection.svelte.js'
+  import { Cable, Save } from '@lucide/svelte'
 
-  let { credentials } = $props();
+  let { credentials } = $props()
 
   async function createConnection(e) {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
-      let res = await CreateConnection(connection.credential);
+      let res = await CreateConnection(connection.credential)
 
       // Append new active connections
       connection.active_connections.push({
         connection_id: res.ConnectionId,
         connection_name: connection.credential.connection_name,
-      });
+      })
 
       // Set current connection
-      connection.current_connection.connection_id = res.ConnectionId;
-      connection.current_connection.connection_name =
-        connection.credential.connection_name;
+      connection.current_connection.connection_id = res.ConnectionId
+      connection.current_connection.connection_name = connection.credential.connection_name
     } catch (err) {
-      console.log("Failed to create connection:", err);
+      console.log('Failed to create connection:', err)
     }
   }
 
   async function saveConnection(e) {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
-      let timeNow = generateDBTime();
+      let timeNow = generateDBTime()
       let req = {
         title: connection.credential.connection_name,
         db_vendor: connection.credential.db_vendor,
@@ -45,37 +41,31 @@
         database_name: connection.credential.database_name,
         created_at: timeNow,
         updated_at: timeNow,
-      };
+      }
       if (connection.credential.credential_id > 0) {
         // Add credential id to update
-        req.id = connection.credential.credential_id;
+        req.id = connection.credential.credential_id
       }
 
-      await SaveCredential(req);
+      await SaveCredential(req)
 
       if (connection.credential.credential_id > 0) {
         // Update credential list
-        credentials[connection.credential.credential_idx] =
-          connection.credential;
-        credentials[connection.credential.credential_idx].id =
-          connection.credential.credential_id;
+        credentials[connection.credential.credential_idx] = connection.credential
+        credentials[connection.credential.credential_idx].id = connection.credential.credential_id
         credentials[connection.credential.credential_idx].title =
-          connection.credential.connection_name;
+          connection.credential.connection_name
         credentials[connection.credential.credential_idx].db_vendor =
-          connection.credential.db_vendor;
-        credentials[connection.credential.credential_idx].host =
-          connection.credential.host;
-        credentials[connection.credential.credential_idx].port =
-          connection.credential.port;
-        credentials[connection.credential.credential_idx].user =
-          connection.credential.user;
-        credentials[connection.credential.credential_idx].password =
-          connection.credential.password;
+          connection.credential.db_vendor
+        credentials[connection.credential.credential_idx].host = connection.credential.host
+        credentials[connection.credential.credential_idx].port = connection.credential.port
+        credentials[connection.credential.credential_idx].user = connection.credential.user
+        credentials[connection.credential.credential_idx].password = connection.credential.password
         credentials[connection.credential.credential_idx].database_name =
-          connection.credential.database_name;
+          connection.credential.database_name
       }
     } catch (err) {
-      console.log("Failed to save connection:", err);
+      console.log('Failed to save connection:', err)
     }
   }
 </script>
@@ -90,9 +80,7 @@
   </h3>
   <form onsubmit={createConnection} class="connection-form">
     <div class="connection-form-item">
-      <label for="connection_name" class="connection-form-label">
-        Connection Name
-      </label>
+      <label for="connection_name" class="connection-form-label"> Connection Name </label>
       <input
         class="connection-form-input"
         type="text"
@@ -153,9 +141,7 @@
       />
     </div>
     <div class="connection-form-item">
-      <label for="database_name" class="connection-form-label">
-        Database Name
-      </label>
+      <label for="database_name" class="connection-form-label"> Database Name </label>
       <input
         class="connection-form-input"
         type="text"

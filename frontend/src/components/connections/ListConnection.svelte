@@ -1,38 +1,38 @@
 <script>
-  import { DeleteCredential } from "../../../wailsjs/go/usecase/Usecase";
-  import { Server, User, Database, Trash, Plus } from "@lucide/svelte";
-  import { connection } from "../../states/connection.svelte";
-  import { handleEnter } from "../../utils/key";
+  import { DeleteCredential } from '../../../wailsjs/go/usecase/Usecase'
+  import { Server, User, Database, Trash, Plus } from '@lucide/svelte'
+  import { connection } from '../../states/connection.svelte'
+  import { handleEnter } from '../../utils/key'
 
-  let { credentials } = $props();
+  let { credentials } = $props()
 
   function fillCredential(credential, credentialIdx) {
-    connection.credential.credential_idx = credentialIdx;
-    connection.credential.credential_id = credential.id;
-    connection.credential.connection_name = credential.title;
-    connection.credential.db_vendor = credential.db_vendor;
-    connection.credential.host = credential.host;
-    connection.credential.port = credential.port;
-    connection.credential.user = credential.user;
-    connection.credential.password = credential.password;
-    connection.credential.database_name = credential.database_name;
+    connection.credential.credential_idx = credentialIdx
+    connection.credential.credential_id = credential.id
+    connection.credential.connection_name = credential.title
+    connection.credential.db_vendor = credential.db_vendor
+    connection.credential.host = credential.host
+    connection.credential.port = credential.port
+    connection.credential.user = credential.user
+    connection.credential.password = credential.password
+    connection.credential.database_name = credential.database_name
   }
 
   async function deleteCredential(credential, credentialIdx) {
     try {
       let req = {
         credential_id: credential.id,
-      };
-      await DeleteCredential(req);
-      credentials.splice(credentialIdx, 1);
+      }
+      await DeleteCredential(req)
+      credentials.splice(credentialIdx, 1)
     } catch (err) {
-      console.log("Failed to delete credential:", err);
+      console.log('Failed to delete credential:', err)
     }
   }
 
   function addCredential() {
-    connection.credential.credential_idx = 0;
-    connection.credential.credential_id = 0;
+    connection.credential.credential_idx = 0
+    connection.credential.credential_id = 0
   }
 </script>
 
@@ -44,14 +44,14 @@
       role="button"
       tabindex="0"
       onclick={(e) => {
-        e.preventDefault();
-        addCredential();
+        e.preventDefault()
+        addCredential()
       }}
       onkeydown={(e) => {
         handleEnter(e, () => {
-          e.preventDefault();
-          addCredential();
-        });
+          e.preventDefault()
+          addCredential()
+        })
       }}
     >
       <Plus size="18" strokeWidth="3" />
@@ -65,14 +65,14 @@
           role="button"
           tabindex="0"
           onclick={(e) => {
-            e.preventDefault();
-            fillCredential(credential, i);
+            e.preventDefault()
+            fillCredential(credential, i)
           }}
           onkeydown={(e) => {
             handleEnter(e, () => {
-              e.preventDefault();
-              fillCredential(credential, i);
-            });
+              e.preventDefault()
+              fillCredential(credential, i)
+            })
           }}
         >
           <div
@@ -80,16 +80,16 @@
             role="button"
             tabindex="0"
             onclick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              deleteCredential(credential, i);
+              e.preventDefault()
+              e.stopPropagation()
+              deleteCredential(credential, i)
             }}
             onkeydown={(e) => {
               handleEnter(e, () => {
-                e.preventDefault();
-                e.stopPropagation();
-                deleteCredential(credential, i);
-              });
+                e.preventDefault()
+                e.stopPropagation()
+                deleteCredential(credential, i)
+              })
             }}
           >
             <Trash size="14" />

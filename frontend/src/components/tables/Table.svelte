@@ -1,10 +1,10 @@
 <script>
-  import { getTableTabs } from "../../states/tables.svelte";
-  import TableSidebar from "./TableSidebar.svelte";
-  import TableTabs from "./TableTabs.svelte";
-  import TableTab from "./TableTab.svelte";
+  import { getTableTabs } from '../../states/tables.svelte'
+  import TableSidebar from './TableSidebar.svelte'
+  import TableTabs from './TableTabs.svelte'
+  import TableTab from './TableTab.svelte'
 
-  let tableTabs = getTableTabs();
+  let tableTabs = getTableTabs()
 </script>
 
 <div class="table">

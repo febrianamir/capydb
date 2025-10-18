@@ -1,8 +1,8 @@
 <script>
-  import { EllipsisVertical } from "@lucide/svelte";
-  import { setOpenedTab } from "../states/tab.svelte";
-  import { connection } from "../states/connection.svelte";
-  import { handleEnter } from "../utils/key";
+  import { EllipsisVertical } from '@lucide/svelte'
+  import { setOpenedTab } from '../states/tab.svelte'
+  import { connection } from '../states/connection.svelte'
+  import { handleEnter } from '../utils/key'
 </script>
 
 <div class="tab">
@@ -11,14 +11,14 @@
     role="button"
     tabindex="0"
     onclick={(e) => {
-      e.preventDefault();
-      setOpenedTab("CONNECTION");
+      e.preventDefault()
+      setOpenedTab('CONNECTION')
     }}
     onkeydown={(e) => {
       handleEnter(e, () => {
-        e.preventDefault();
-        setOpenedTab("TABLE");
-      });
+        e.preventDefault()
+        setOpenedTab('TABLE')
+      })
     }}
   >
     <EllipsisVertical />
@@ -28,17 +28,17 @@
     role="button"
     tabindex="0"
     onclick={(e) => {
-      e.preventDefault();
-      setOpenedTab("TABLE");
+      e.preventDefault()
+      setOpenedTab('TABLE')
     }}
     onkeydown={(e) => {
       handleEnter(e, () => {
-        e.preventDefault();
-        setOpenedTab("TABLE");
-      });
+        e.preventDefault()
+        setOpenedTab('TABLE')
+      })
     }}
   >
-    {#if connection.current_connection.connection_id !== ""}
+    {#if connection.current_connection.connection_id !== ''}
       {connection.current_connection.connection_name}
     {:else}
       No Active Connection

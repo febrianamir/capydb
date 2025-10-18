@@ -1,7 +1,7 @@
 let tableTabs = $state({
   tabs: [],
-  openedTab: "",
-});
+  openedTab: '',
+})
 
 export function getTableTabs() {
   return tableTabs

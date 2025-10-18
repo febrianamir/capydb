@@ -1,16 +1,16 @@
 <script>
-  import Connection from "./components/connections/Connection.svelte";
-  import Table from "./components/tables/Table.svelte";
-  import Tab from "./components/Tab.svelte";
-  import { getOpenedTab } from "./states/tab.svelte";
+  import Connection from './components/connections/Connection.svelte'
+  import Table from './components/tables/Table.svelte'
+  import Tab from './components/Tab.svelte'
+  import { getOpenedTab } from './states/tab.svelte'
 </script>
 
 <div class="app">
   <Tab />
-  {#if getOpenedTab() === "CONNECTION"}
+  {#if getOpenedTab() === 'CONNECTION'}
     <Connection />
   {/if}
-  {#if getOpenedTab() === "TABLE"}
+  {#if getOpenedTab() === 'TABLE'}
     <Table />
   {/if}
 </div>

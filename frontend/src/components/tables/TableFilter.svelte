@@ -1,76 +1,56 @@
 <script>
-  import { handleEnter } from "../../utils/key";
-  import {
-    CirclePlus,
-    CircleMinus,
-    Check,
-    ChevronsUpDown,
-  } from "@lucide/svelte";
+  import { handleEnter } from '../../utils/key'
+  import { CirclePlus, CircleMinus, Check, ChevronsUpDown } from '@lucide/svelte'
 
-  let {
-    isShowTableFilter,
-    filters,
-    updateQueryTableContents,
-    queryTableContents,
-    tableColumns,
-  } = $props();
+  let { isShowTableFilter, filters, updateQueryTableContents, queryTableContents, tableColumns } =
+    $props()
 
   const operators = [
-    "=",
-    "!=",
-    "<",
-    ">",
-    "<=",
-    ">=",
-    "IN",
-    "NOT IN",
-    "LIKE",
-    "BETWEEN",
-    "IS NULL",
-    "IS NOT NULL",
-  ];
-  const oneColumnOperators = [
-    "=",
-    "!=",
-    "<",
-    ">",
-    "<=",
-    ">=",
-    "IN",
-    "NOT IN",
-    "LIKE",
-  ];
-  const twoColumnOperators = ["BETWEEN"];
+    '=',
+    '!=',
+    '<',
+    '>',
+    '<=',
+    '>=',
+    'IN',
+    'NOT IN',
+    'LIKE',
+    'BETWEEN',
+    'IS NULL',
+    'IS NOT NULL',
+  ]
+  const oneColumnOperators = ['=', '!=', '<', '>', '<=', '>=', 'IN', 'NOT IN', 'LIKE']
+  const twoColumnOperators = ['BETWEEN']
 
   function toggleFilterActiveStatus(filter) {
-    filter.isActive = !filter.isActive;
+    filter.isActive = !filter.isActive
   }
 
   // resizeSelectInput width based on choosed value
   function resizeSelectInput(e) {
-    const select = e.target;
-    const mirror = select.nextElementSibling; // Assumes mirror <span> right after select
-    const selected = select.options[select.selectedIndex];
+    const select = e.target
+    const mirror = select.nextElementSibling // Assumes mirror <span> right after select
+    const selected = select.options[select.selectedIndex]
 
-    mirror.textContent = selected.text;
-    select.style.width = mirror.offsetWidth + 32 + "px"; // Add padding/arrow width
+    mirror.textContent = selected.text
+    select.style.width = mirror.offsetWidth + 32 + 'px' // Add padding/arrow width
   }
 
   function addFilterItem() {
     filters.push({
       isActive: true,
-      operator: "=",
-      firstValue: "",
-      secondValue: "",
-    });
+      operator: '=',
+      firstValue: '',
+      secondValue: '',
+    })
   }
 
   function closeFilterItem(idx) {
-    filters.splice(idx, 1);
+    filters.splice(idx, 1)
   }
 
   function filterTableRecords() {
-    let conditions = [];
+    let conditions = []
     filters.forEach((filter) => {
       if (filter.isActive && filter.field && filter.operator) {
         conditions.push({
@@ -78,16 +58,16 @@
           operator: filter.operator,
           first_value: filter.firstValue,
           second_value: filter.secondValue,
-        });
+        })
       }
-    });
+    })
     updateQueryTableContents({
       table_name: queryTableContents.table_name,
       sort_by: queryTableContents.sort_by,
       order_by: queryTableContents.order_by,
       offset: queryTableContents.offset,
       conditions: conditions,
-    });
+    })
   }
 </script>
 
@@ -102,9 +82,7 @@
             onchange={(e) => toggleFilterActiveStatus(filter)}
             class="table-filter-check-input"
           />
-          <div
-            class="table-filter-check-icon {filter.isActive ? 'active' : ''}"
-          >
+          <div class="table-filter-check-icon {filter.isActive ? 'active' : ''}">
             <Check size="14" strokeWidth="3" />
           </div>
         </div>
@@ -123,9 +101,7 @@
               {/each}
             </select>
             <!-- To mirror choosed option width -->
-            <span
-              style="position:absolute;visibility:hidden;white-space:pre;font:inherit;"
-            ></span>
+            <span style="position:absolute;visibility:hidden;white-space:pre;font:inherit;"></span>
             <div class="table-filter-field-icon">
               <ChevronsUpDown size="15" strokeWidth="3" />
             </div>
@@ -142,9 +118,7 @@
               {/each}
             </select>
             <!-- To mirror choosed option width -->
-            <span
-              style="position:absolute;visibility:hidden;white-space:pre;font:inherit;"
-            ></span>
+            <span style="position:absolute;visibility:hidden;white-space:pre;font:inherit;"></span>
             <div class="table-filter-operator-icon">
               <ChevronsUpDown size="15" strokeWidth="3" />
             </div>
@@ -171,14 +145,14 @@
           role="button"
           tabindex="0"
           onclick={(e) => {
-            e.preventDefault();
-            closeFilterItem(i);
+            e.preventDefault()
+            closeFilterItem(i)
           }}
           onkeydown={(e) => {
             handleEnter(e, () => {
-              e.preventDefault();
-              closeFilterItem(i);
-            });
+              e.preventDefault()
+              closeFilterItem(i)
+            })
           }}
         >
           <CircleMinus size="15" />
@@ -192,14 +166,14 @@
       role="button"
       tabindex="0"
       onclick={(e) => {
-        e.preventDefault();
-        addFilterItem();
+        e.preventDefault()
+        addFilterItem()
       }}
       onkeydown={(e) => {
         handleEnter(e, () => {
-          e.preventDefault();
-          addFilterItem();
-        });
+          e.preventDefault()
+          addFilterItem()
+        })
       }}
     >
       <CirclePlus size="15" />
@@ -209,14 +183,14 @@
       role="button"
       tabindex="0"
       onclick={(e) => {
-        e.preventDefault();
-        filterTableRecords();
+        e.preventDefault()
+        filterTableRecords()
       }}
       onkeydown={(e) => {
         handleEnter(e, () => {
-          e.preventDefault();
-          filterTableRecords();
-        });
+          e.preventDefault()
+          filterTableRecords()
+        })
       }}
     >
       Filter
