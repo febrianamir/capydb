@@ -42,19 +42,26 @@ func (u *Usecase) GetCredentials(req request.GetCredentials) (response.GetCreden
 
 	var res response.GetCredentials
 	var data []model.Credential
+	var total int64
 	statement := u.dbDataConn.Model(&model.Credential{})
 
 	if req.Search != "" {
 		statement = statement.Where("title ILIKE ?", "%"+req.Search+"%")
 	}
 
+	err := statement.Count(&total).Error
+	if err != nil {
+		return res, err
+	}
+
 	statement.Order("id DESC")
-	err := statement.Find(&data).Error
+	err = statement.Find(&data).Error
 	if err != nil {
 		return res, err
 	}
 
 	res.Data = data
+	res.Total = int(total)
 	return res, nil
 }
 
